@@ -8,5 +8,10 @@ namespace SchoolManagementSystem.Domain.Enums
 {
     public enum SchoolDay
     {
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday
     }
 }

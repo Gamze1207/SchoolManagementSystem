@@ -8,5 +8,16 @@ namespace SchoolManagementSystem.Domain.Enums
 {
     public enum SubjectType
     {
+        Math,
+        English,
+        History,
+        Biology,
+        Chemistry,
+        Physics,
+        Geography,
+        Literature,
+        Art,
+        Music,
+        PE
     }
 }
