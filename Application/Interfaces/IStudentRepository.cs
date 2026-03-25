@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolManagementSystem.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace SchoolManagementSystem.Application.Interfaces
 {
     public interface IStudentRepository
     {
+
+        IReadOnlyList<Student> GetAll();
+        Student GetById(int id);
+        void Save(Student student);
+
     }
 }
