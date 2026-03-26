@@ -44,7 +44,6 @@ namespace SchoolManagementSystem.Infrastructure
 
             var db = storage.Load();
 
-            // CREATE
             if (_class.Id == 0)
             {
                 var newClass = new Class(
@@ -52,7 +51,7 @@ namespace SchoolManagementSystem.Infrastructure
                     _class.Name
                 );
 
-                // copy students
+                
                 if (_class.students != null)
                 {
                     foreach (var s in _class.students)
