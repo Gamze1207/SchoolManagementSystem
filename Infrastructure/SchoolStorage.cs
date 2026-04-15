@@ -1,9 +1,5 @@
-﻿using SchoolManagementSystem.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using SchoolManagementSystem.Domain.Entities;
 
 namespace SchoolManagementSystem.Infrastructure
 {
@@ -23,5 +19,7 @@ namespace SchoolManagementSystem.Infrastructure
         public List<Teacher> Teachers { get; set; } = new();
 
         public List<TeacherSchedule> TeacherSchedules { get; set; } = new();
+
+        public List<Grade> Grades { get; set; } = new();
     }
 }
