@@ -15,7 +15,7 @@ namespace SchoolManagementSystem.Infrastructure
 
         public FileTeacherScheduleRepository(FileStorage storage)
         {
-            this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            this.storage = storage;
         }
 
         public IReadOnlyList<TeacherSchedule> GetAll()
