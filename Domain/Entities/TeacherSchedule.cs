@@ -14,8 +14,9 @@ namespace SchoolManagementSystem.Domain.Entities
         public Class Class { get; private set; }
         public SubjectType Subject { get; private set; }
         public int Hours { get; private set; }
+        public int Year { get; private set; }
 
-        public TeacherSchedule(int id, Teacher teacher, Class _class, SubjectType subject, int hours)
+        public TeacherSchedule(int id, Teacher teacher, Class _class, SubjectType subject, int hours, int year)
         {
             if (id < 0)
                 throw new ArgumentException("Id must be positive");
@@ -25,13 +26,16 @@ namespace SchoolManagementSystem.Domain.Entities
                 throw new ArgumentNullException("Class must be not be null");
             if (subject == default)
                 throw new ArgumentException("Subject type is required");
-            if (hours < 0 && hours>22)
-                throw new ArgumentException("Hours must be between ");
+            if (hours < 0 && hours > 22)
+                throw new ArgumentException("Hours must be between 0 and 22");
+            if (year < 2000 || year > DateTime.Now.Year + 1)
+                throw new ArgumentException("Year must be between 2000 and next year");
             Id = id;
             Teacher = teacher;
             Class = _class;
             Subject = subject;
             Hours = hours;
+            Year = year;
         }
     }
 }

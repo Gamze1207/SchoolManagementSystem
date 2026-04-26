@@ -51,7 +51,8 @@ namespace SchoolManagementSystem.Infrastructure
                     _schedule.Teacher,
                     _schedule.Class,
                     _schedule.Subject,
-                    _schedule.Hours
+                    _schedule.Hours,
+                    _schedule.Year
                 );
 
                 db.TeacherSchedules.Add(newSchedule);
@@ -70,7 +71,8 @@ namespace SchoolManagementSystem.Infrastructure
                             _schedule.Teacher,
                             _schedule.Class,
                             _schedule.Subject,
-                            _schedule.Hours
+                            _schedule.Hours,
+                            _schedule.Year
                     );
 
                         db.TeacherSchedules[i] = updated;
