@@ -47,6 +47,11 @@ namespace SchoolManagementSystem.Application
         public void AddTeacher(string name, List<SubjectType> subjects)
         {
             //Dzheyda
+            var teacher = new Teacher(0, name);
+            if (subjects != null)
+                foreach (var s in subjects)
+                    teacher.AddSubject(s);
+            teacherRepository.Save(teacher);
         }
 
         public void AddSubject(Subject subject)
@@ -57,11 +62,21 @@ namespace SchoolManagementSystem.Application
         public void AddGrade(int studentId, int value, Subject subject)
         {
             //Dzheyda
+            var student = studentRepository.GetById(studentId);
+            var grade = new Grade(0, value, student, subject);
+            student.AddGrade(grade);
+            studentRepository.Save(student);
         }
 
         public void UpdateGrade(int studentId, Grade updatedGrade)
         {
             //Dzheyda
+            var student = studentRepository.GetById(studentId);
+            var index = student.grades.FindIndex(g => g.Id == updatedGrade.Id);
+            if (index == -1)
+                throw new KeyNotFoundException("Grade not found");
+            student.grades[index] = updatedGrade;
+            studentRepository.Save(student);
         }
 
         public double CalculateAverageGrade(int studentId)
@@ -80,11 +95,19 @@ namespace SchoolManagementSystem.Application
         public void AddClass(string name)
         {
             //Dzheyda 
+            var schoolClass = new Class(0, name);
+            classRepository.Save(schoolClass);
+
         }
 
         public void AddStudentToClass(int studentId, int classId)
         {
             //Dzheyda
+            var student = studentRepository.GetById(studentId);
+            var schoolClass = classRepository.GetById(classId);
+
+            schoolClass.AddStudent(student);
+            classRepository.Save(schoolClass);
         }
 
         public IReadOnlyList<Attendance> GetAbsences(int studentId)
@@ -101,20 +124,32 @@ namespace SchoolManagementSystem.Application
         public IEnumerable<Grade> GetGradesBySubject(SubjectType subject)
         {
             //Dzheyda
-            return null;
+            return gradeRepository.GetAll()
+                .Where(g => g.Subject.Type == subject);
         }
 
         public IEnumerable<(Student Student, double Average)> GetClassAverage(int classId)
         {
             //Dzheyda
-            return null;
+            var schoolClass = classRepository.GetById(classId);
+            return schoolClass.students.Select(s =>
+            {
+                double avg = s.grades.Count == 0 ? 0 : s.grades.Average(g => g.Value);
+                return (s, avg);
+            });
         }
 
         public (Teacher Teacher, IReadOnlyList<SubjectType> Subjects, IReadOnlyList<TeacherSchedule> Schedules)
         GetTeacherInfo(int teacherId)
         {
             //Dzheyda
-            return (null, null, null);
+            var teacher = teacherRepository.GetById(teacherId);
+
+            return (
+                teacher,
+                teacher.subjects.AsReadOnly(),
+                teacher.schedules.AsReadOnly()
+                );
         }
 
         public IReadOnlyList<Schedule> GetSchedule()
@@ -132,6 +167,18 @@ namespace SchoolManagementSystem.Application
         public void SetScheduleYear(int scheduleId, int year)
         {
             //Dzheyda
+            var schedule = teacherScheduleRepository.GetById(scheduleId);
+
+            var updated = new TeacherSchedule(
+                schedule.Id,
+                schedule.Teacher,
+                schedule.Class,
+                schedule.Subject,
+                schedule.Hours,
+                year
+            );
+
+            teacherScheduleRepository.Save( updated );
         }
 
         public IEnumerable<Student> GetTopStudents(double minAverage)
@@ -143,7 +190,9 @@ namespace SchoolManagementSystem.Application
         public IEnumerable<Student> GetProblemStudents(double maxAverage)
         {
             //Dzheyda
-            return null;
+            return studentRepository.GetAll()
+                .Where(s => s.grades.Count > 0 &&
+                            s.grades.Average(g => g.Value) <= maxAverage);
         }
     }
 }
