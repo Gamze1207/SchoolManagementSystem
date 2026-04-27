@@ -37,11 +37,24 @@ namespace SchoolManagementSystem.Application
         public void AddStudent(string name, int age, Class schoolClass)
         {
             //Gamze
+            var student = new Student(0,name, age, schoolClass);
+            studentRepository.Save(student);
         }
 
         public void UpdateStudent(int id, string name, int age, Class schoolClass)
         {
             //Gamze
+            var existing = studentRepository.GetById(id);
+            var updated = new Student(id, name, age, schoolClass);
+            foreach (var item in existing.grades)
+            {
+                updated.AddGrade(item);
+            }
+            foreach (var item in existing.attendances)
+            {
+                updated.AddAttendance(item);
+            }
+            studentRepository.Save(updated);
         }
 
         public void AddTeacher(string name, List<SubjectType> subjects)
@@ -57,6 +70,7 @@ namespace SchoolManagementSystem.Application
         public void AddSubject(Subject subject)
         {
             //Gamze
+            subjectRepository.Save(subject);
         }
 
         public void AddGrade(int studentId, int value, Subject subject)
@@ -82,14 +96,21 @@ namespace SchoolManagementSystem.Application
         public double CalculateAverageGrade(int studentId)
         {
             //Gamze
-            return 0;
+            var student = studentRepository.GetById(studentId);
+            if (student.grades.Count == 0)
+            {
+                return 0;
+            }
+            return student.grades.Average(x => x.Value);
         }
 
         public (Student Student, IReadOnlyList<Grade> Grades, IReadOnlyList<Attendance> Absences, double Average)
         GenerateReportCard(int studentId)
         {
             //Gamze
-            return (null, null, null, 0);
+            var student = studentRepository.GetById(studentId);
+            double avg = student.grades.Count==0?0:student.grades.Average(x => x.Value);
+            return (student, student.grades, student.attendances, avg);
         }
 
         public void AddClass(string name)
@@ -113,12 +134,16 @@ namespace SchoolManagementSystem.Application
         public IReadOnlyList<Attendance> GetAbsences(int studentId)
         {
             //Gamze
-            return null;
+            return studentRepository.GetById(studentId).attendances;
         }
 
         public void AddAttendance(int studentId, DateTime date, AttendanceType status)
         {
             //Gamze
+            var student = studentRepository.GetById(studentId);
+            var attendances = new Attendance(0,student, date, status);
+            student.AddAttendance(attendances);
+            studentRepository.Save(student);
         }
 
         public IEnumerable<Grade> GetGradesBySubject(SubjectType subject)
@@ -155,13 +180,16 @@ namespace SchoolManagementSystem.Application
         public IReadOnlyList<Schedule> GetSchedule()
         {
             //Gamze
-            return null;
+            return scheduleRepository.GetAll();
         }
 
         public IEnumerable<Teacher> GetFreeTeachers(SchoolDay day, int period)
         {
             //Gamze
-            return null;
+            return teacherRepository.GetAll().Where(t => !t.schedules.Any(s =>
+            s.Class != null && s.Hours > 0 && s.Class.schedules.Any(c =>
+            c.Id == s.Id && c.Class.schedules.Any(slot => 
+            slot.Id == s.Id && slot.Class.schedules.Any()))));
         }
 
         public void SetScheduleYear(int scheduleId, int year)
@@ -184,7 +212,8 @@ namespace SchoolManagementSystem.Application
         public IEnumerable<Student> GetTopStudents(double minAverage)
         {
             //Gamze
-            return null;
+            return studentRepository.GetAll()
+                .Where(s=>s.grades.Count>0&&s.grades.Average(x=>x.Value)>=minAverage);
         }
 
         public IEnumerable<Student> GetProblemStudents(double maxAverage)
