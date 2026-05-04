@@ -134,6 +134,12 @@ namespace SchoolManagementSystem.Application
             studentRepository.Save(student);
         }
 
+        public IReadOnlyList<Class> GetAllClasses()
+        {
+            //Gamze
+            return classRepository.GetAll();
+        }
+
         public IReadOnlyList<Attendance> GetAbsences(int studentId)
         {
             //Gamze
@@ -144,8 +150,9 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             var student = studentRepository.GetById(studentId);
-            var attendances = new Attendance(0,student, date, status);
-            student.AddAttendance(attendances);
+            var attendance = new Attendance(0, student, date, status);
+            attendanceRepository.Save(attendance);
+            student.AddAttendance(attendance);
             studentRepository.Save(student);
         }
 
