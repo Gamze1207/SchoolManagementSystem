@@ -1,4 +1,6 @@
 ﻿using SchoolManagementSystem.Application;
+using SchoolManagementSystem.Domain.Entities;
+using SchoolManagementSystem.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,13 +100,65 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddStudent()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Student name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Age: ");
+            int age = int.Parse(Console.ReadLine());
+
+            var classes = schoolService.GetAllClasses();
+
+            foreach (var c in classes)
+                Console.WriteLine($"{c.Id} - {c.Name}");
+
+            Console.Write("Class ID: ");
+            int classId = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var schoolClass = classes.First(c => c.Id == classId);
+                schoolService.AddStudent(name, age, schoolClass);
+                Console.WriteLine("Student added!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void UpdateStudent()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Student ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.Write("New name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("New age: ");
+            int age = int.Parse(Console.ReadLine());
+
+            var classes = schoolService.GetAllClasses();
+            foreach (var c in classes)
+                Console.WriteLine($"{c.Id} - {c.Name}");
+
+            Console.Write("New class ID: ");
+            int classId = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var schoolClass = classes.First(c => c.Id == classId);
+                schoolService.UpdateStudent(id, name, age, schoolClass);
+                Console.WriteLine("Student updated!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void AddTeacher()
@@ -116,7 +170,27 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddSubject()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.WriteLine("Choose subject type:");
+            foreach (var type in Enum.GetValues(typeof(SubjectType)))
+                Console.WriteLine($"{(int)type} - {type}");
+
+            Console.Write("Type number: ");
+            int typeNumber = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var subjectType = (SubjectType)typeNumber;
+                var subject = new Subject(0, subjectType);
+
+                schoolService.AddSubject(subject);
+                Console.WriteLine("Subject added!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void AddGrade()
@@ -134,13 +208,49 @@ namespace SchoolManagementSystem.ConsoleUI
         private void CalculateAverageGrade()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Student ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            try
+            {
+                double avg = schoolService.CalculateAverageGrade(id);
+                Console.WriteLine($"Average grade: {avg}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GenerateReportCard()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Student ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var report = schoolService.GenerateReportCard(id);
+
+                Console.WriteLine($"Student: {report.Student.Name}");
+                Console.WriteLine($"Average: {report.Average}");
+
+                Console.WriteLine("Grades:");
+                foreach (var g in report.Grades)
+                    Console.WriteLine($"{g.Subject.Type}: {g.Value}");
+
+                Console.WriteLine("Absences:");
+                foreach (var a in report.Absences)
+                    Console.WriteLine($"{a.Date.ToShortDateString()} - {a.Status}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void AddClass()
@@ -158,13 +268,52 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetAbsences()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Student ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var absences = schoolService.GetAbsences(id);
+
+                foreach (var a in absences)
+                    Console.WriteLine($"{a.Date.ToShortDateString()} - {a.Status}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void AddAttendance()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Student ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.Write("Date (yyyy-mm-dd): ");
+            DateTime date = DateTime.Parse(Console.ReadLine());
+
+            Console.WriteLine("Attendance type:");
+            foreach (var t in Enum.GetValues(typeof(AttendanceType)))
+                Console.WriteLine($"{(int)t} - {t}");
+
+            Console.Write("Type number: ");
+            int typeNumber = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var status = (AttendanceType)typeNumber;
+                schoolService.AddAttendance(id, date, status);
+                Console.WriteLine("Attendance added!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetGradesBySubject()
@@ -188,13 +337,56 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetSchedule()
         {
             //Gamze
-            throw new NotImplementedException();
+            try
+            {
+                var schedules = schoolService.GetSchedule();
+
+                foreach (var s in schedules)
+                {
+                    Console.WriteLine(
+                        $"{s.Id} | " +
+                        $"{s.Slot.Day} Period {s.Slot.Period} | " +
+                        $"Teacher: {s.Schedules.Teacher.Name} | " +
+                        $"Class: {s.Schedules.Class.Name} | " +
+                        $"Subject: {s.Schedules.Subject}"
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void CheckForFreeTeachers()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.WriteLine("Day:");
+            foreach (var d in Enum.GetValues(typeof(SchoolDay)))
+                Console.WriteLine($"{(int)d} - {d}");
+
+            Console.Write("Choose day: ");
+            int dayNumber = int.Parse(Console.ReadLine());
+            var day = (SchoolDay)dayNumber;
+
+            Console.Write("Period: ");
+            int period = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var freeTeachers = schoolService.GetFreeTeachers(day, period);
+
+                foreach (var t in freeTeachers)
+                    Console.WriteLine($"{t.Id} - {t.Name}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void SetScheduleYear()
@@ -206,7 +398,22 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetTopStudents()
         {
             //Gamze
-            throw new NotImplementedException();
+            Console.Write("Minimum average: ");
+            double minAvg = double.Parse(Console.ReadLine());
+
+            try
+            {
+                var students = schoolService.GetTopStudents(minAvg);
+
+                foreach (var s in students)
+                    Console.WriteLine($"{s.Id} - {s.Name} (Avg: {s.grades.Average(g => g.Value)})");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetProblemStudents()
