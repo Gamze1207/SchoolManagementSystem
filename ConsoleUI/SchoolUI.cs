@@ -1,4 +1,6 @@
 ﻿using SchoolManagementSystem.Application;
+using SchoolManagementSystem.Domain.Entities;
+using SchoolManagementSystem.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +112,32 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddTeacher()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            var subjects = new List<SubjectType>();
+
+            Console.WriteLine("Enter subjects (empty to stop):");
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) break;
+
+                if (Enum.TryParse(input, out SubjectType subject))
+                    subjects.Add(subject);
+            }
+
+            try
+            {
+                schoolService.AddTeacher(name, subjects);
+                Console.WriteLine("Teacher added!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void AddSubject()
@@ -122,13 +149,56 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddGrade()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Student Id: ");
+            int studentId = int.Parse(Console.ReadLine());
+
+            Console.Write("Grade value: ");
+            int value = int.Parse(Console.ReadLine());
+
+            Console.Write("Subject type: ");
+            Enum.TryParse(Console.ReadLine(), out SubjectType type);
+
+            try
+            {
+                schoolService.AddGrade(studentId, value, new Subject(0, type));
+                Console.WriteLine("Grade added!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void UpdateGrade()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Student Id: ");
+            int studentId = int.Parse(Console.ReadLine());
+
+            Console.Write("Grade Id: ");
+            int gradeId = int.Parse(Console.ReadLine());
+
+            Console.Write("New value: ");
+            int value = int.Parse(Console.ReadLine());
+
+            Console.Write("Subject type: ");
+            Enum.TryParse(Console.ReadLine(), out SubjectType type);
+
+            try
+            {
+                var grade = new Grade(gradeId, value, null, new Subject(0, type));
+                schoolService.UpdateGrade(studentId, grade);
+
+                Console.WriteLine("Grade updated!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void CalculateAverageGrade()
@@ -146,13 +216,42 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddClass()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Class name: ");
+            string name = Console.ReadLine();
+
+            try
+            {
+                schoolService.AddClass(name);
+                Console.WriteLine("Class added!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void AddStudentToClass()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Student Id: ");
+            int studentId = int.Parse(Console.ReadLine());
+
+            Console.Write("Class Id: ");
+            int classId = int.Parse(Console.ReadLine());
+
+            try
+            {
+                schoolService.AddStudentToClass(studentId, classId);
+                Console.WriteLine("Student added to class!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetAbsences()
@@ -170,19 +269,71 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetGradesBySubject()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Subject type: ");
+            Enum.TryParse(Console.ReadLine(), out SubjectType subject);
+
+            try
+            {
+                var grades = schoolService.GetGradesBySubject(subject);
+
+                foreach (var g in grades)
+                    Console.WriteLine($"Student: {g.Student.Name} | Grade: {g.Value}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetGradesByClass()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Class Id: ");
+            int classId = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var result = schoolService.GetClassAverage(classId);
+
+                foreach (var item in result)
+                    Console.WriteLine($"{item.Student.Name} | Avg: {item.Average:F2}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetTeacherInfo()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Teacher Id: ");
+            int teacherId = int.Parse(Console.ReadLine());
+
+            try
+            {
+                var info = schoolService.GetTeacherInfo(teacherId);
+
+                Console.WriteLine($"Name: {info.Teacher.Name}");
+
+                Console.WriteLine("Subjects:");
+                foreach (var s in info.Subjects)
+                    Console.WriteLine($"- {s}");
+
+                Console.WriteLine("Schedules:");
+                foreach (var sch in info.Schedules)
+                    Console.WriteLine($"{sch.Subject} | Class: {sch.Class?.Name} | Hours: {sch.Hours}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetSchedule()
@@ -200,7 +351,23 @@ namespace SchoolManagementSystem.ConsoleUI
         private void SetScheduleYear()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Schedule Id: ");
+            int scheduleId = int.Parse(Console.ReadLine());
+
+            Console.Write("Year: ");
+            int year = int.Parse(Console.ReadLine());
+
+            try
+            {
+                schoolService.SetScheduleYear(scheduleId, year);
+                Console.WriteLine("Schedule year updated!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void GetTopStudents()
@@ -212,7 +379,22 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetProblemStudents()
         {
             //Dzheyda
-            throw new NotImplementedException();
+            Console.Write("Maximum average: ");
+            double max = double.Parse(Console.ReadLine());
+
+            try
+            {
+                var students = schoolService.GetProblemStudents(max);
+
+                foreach (var s in students)
+                    Console.WriteLine($"{s.Name} - {s.grades.Average(g => g.Value):F2}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadLine();
         }
 
         private void Menu()

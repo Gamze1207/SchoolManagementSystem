@@ -129,6 +129,9 @@ namespace SchoolManagementSystem.Application
 
             schoolClass.AddStudent(student);
             classRepository.Save(schoolClass);
+
+            classRepository.Save(schoolClass);
+            studentRepository.Save(student);
         }
 
         public IReadOnlyList<Attendance> GetAbsences(int studentId)
