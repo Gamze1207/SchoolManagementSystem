@@ -82,6 +82,12 @@ namespace SchoolManagementSystem.Application
             studentRepository.Save(student);
         }
 
+        public Student GetStudentById(int id)
+        {
+            //Dzheyda
+            return studentRepository.GetById(id);
+        }
+
         public void UpdateGrade(int studentId, Grade updatedGrade)
         {
             //Dzheyda

@@ -3,6 +3,7 @@ using SchoolManagementSystem.Domain.Entities;
 using SchoolManagementSystem.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -26,7 +27,7 @@ namespace SchoolManagementSystem.ConsoleUI
                 Menu();
 
                 Console.Write("Choose: ");
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
 
                 switch (input)
                 {
@@ -101,10 +102,15 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Student name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? "";
 
             Console.Write("Age: ");
-            int age = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int age))
+            {
+                Console.WriteLine("Invalid age");
+                return;
+            }
 
             var classes = schoolService.GetAllClasses();
 
@@ -112,7 +118,12 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine($"{c.Id} - {c.Name}");
 
             Console.Write("Class ID: ");
-            int classId = int.Parse(Console.ReadLine());
+            string? inputClassId = Console.ReadLine();
+            if (!int.TryParse(inputClassId, out int classId))
+            {
+                Console.WriteLine("Invalid class ID");
+                return;
+            }
 
             try
             {
@@ -132,20 +143,35 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Student ID: ");
-            int id = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("Invalid ID");
+                return;
+            }
 
             Console.Write("New name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? "";
 
             Console.Write("New age: ");
-            int age = int.Parse(Console.ReadLine());
+            string? inputAge = Console.ReadLine();
+            if (!int.TryParse(inputAge, out int age))
+            {
+                Console.WriteLine("Invalid age");
+                return;
+            }
 
             var classes = schoolService.GetAllClasses();
             foreach (var c in classes)
                 Console.WriteLine($"{c.Id} - {c.Name}");
 
             Console.Write("New class ID: ");
-            int classId = int.Parse(Console.ReadLine());
+            string? inputClassId = Console.ReadLine();
+            if (!int.TryParse(inputClassId, out int classId))
+            {
+                Console.WriteLine("Invalid class ID");
+                return;
+            }
 
             try
             {
@@ -165,14 +191,14 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? "";
 
             var subjects = new List<SubjectType>();
 
             Console.WriteLine("Enter subjects (empty to stop):");
             while (true)
             {
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? "";
                 if (string.IsNullOrWhiteSpace(input)) break;
 
                 if (Enum.TryParse(input, out SubjectType subject))
@@ -200,7 +226,12 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine($"{(int)type} - {type}");
 
             Console.Write("Type number: ");
-            int typeNumber = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int typeNumber))
+            {
+                Console.WriteLine("Invalid type number");
+                return;
+            }
 
             try
             {
@@ -222,10 +253,20 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Student Id: ");
-            int studentId = int.Parse(Console.ReadLine());
+            string? inputStudentId = Console.ReadLine();
+            if (!int.TryParse(inputStudentId, out int studentId))
+            {
+                Console.WriteLine("Invalid student ID");
+                return;
+            }
 
             Console.Write("Grade value: ");
-            int value = int.Parse(Console.ReadLine());
+            string? inputGradeValue = Console.ReadLine();
+            if (!int.TryParse(inputGradeValue, out int value))
+            {
+                Console.WriteLine("Invalid grade value");
+                return;
+            }
 
             Console.Write("Subject type: ");
             Enum.TryParse(Console.ReadLine(), out SubjectType type);
@@ -247,22 +288,38 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Student Id: ");
-            int studentId = int.Parse(Console.ReadLine());
+            string? inputStudentId = Console.ReadLine();
+            if (!int.TryParse(inputStudentId, out int studentId))
+            {
+                Console.WriteLine("Invalid student ID");
+                return;
+            }
 
             Console.Write("Grade Id: ");
-            int gradeId = int.Parse(Console.ReadLine());
+            string? inputGradeId = Console.ReadLine();
+            if (!int.TryParse(inputGradeId, out int gradeId))
+            {
+                Console.WriteLine("Invalid grade ID");
+                return;
+            }
 
             Console.Write("New value: ");
-            int value = int.Parse(Console.ReadLine());
+            string? inputValue = Console.ReadLine();
+            if (!int.TryParse(inputValue, out int value))
+            {
+                Console.WriteLine("Invalid value");
+                return;
+            }
 
             Console.Write("Subject type: ");
             Enum.TryParse(Console.ReadLine(), out SubjectType type);
 
             try
             {
-                var grade = new Grade(gradeId, value, null, new Subject(0, type));
+                var student = schoolService.GetStudentById(studentId);
+                var subject = new Subject(0, type);
+                var grade = new Grade(gradeId, value, student, subject);
                 schoolService.UpdateGrade(studentId, grade);
-
                 Console.WriteLine("Grade updated!");
             }
             catch (Exception ex)
@@ -277,7 +334,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Student ID: ");
-            int id = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("Invalid ID");
+                return;
+            }
 
             try
             {
@@ -296,7 +358,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Student ID: ");
-            int id = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("Invalid ID");
+                return;
+            }
 
             try
             {
@@ -325,7 +392,7 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Class name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? "";
 
             try
             {
@@ -344,10 +411,20 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Student Id: ");
-            int studentId = int.Parse(Console.ReadLine());
+            string? inputStudentId = Console.ReadLine();
+            if (!int.TryParse(inputStudentId, out int studentId))
+            {
+                Console.WriteLine("Invalid student ID");
+                return;
+            }
 
             Console.Write("Class Id: ");
-            int classId = int.Parse(Console.ReadLine());
+            string? inputClassId = Console.ReadLine();
+            if (!int.TryParse(inputClassId, out int classId))
+            {
+                Console.WriteLine("Invalid class ID");
+                return;
+            }
 
             try
             {
@@ -366,7 +443,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Student ID: ");
-            int id = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("Invalid ID");
+                return;
+            }
 
             try
             {
@@ -387,17 +469,32 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Student ID: ");
-            int id = int.Parse(Console.ReadLine());
+            string? inputStudentId = Console.ReadLine();
+            if (!int.TryParse(inputStudentId, out int id))
+            {
+                Console.WriteLine("Invalid student ID");
+                return;
+            }
 
             Console.Write("Date (yyyy-mm-dd): ");
-            DateTime date = DateTime.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!DateTime.TryParse(input, out DateTime date))
+            {
+                Console.WriteLine("Invalid date");
+                return;
+            }
 
             Console.WriteLine("Attendance type:");
             foreach (var t in Enum.GetValues(typeof(AttendanceType)))
                 Console.WriteLine($"{(int)t} - {t}");
 
             Console.Write("Type number: ");
-            int typeNumber = int.Parse(Console.ReadLine());
+            string? inputTypeNumber = Console.ReadLine();
+            if (!int.TryParse(inputTypeNumber, out int typeNumber))
+            {
+                Console.WriteLine("Invalid type number");
+                return;
+            }
 
             try
             {
@@ -438,7 +535,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Class Id: ");
-            int classId = int.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out int classId))
+            {
+                Console.WriteLine("Invalid class ID");
+                return;
+            }
 
             try
             {
@@ -459,7 +561,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Teacher Id: ");
-            int teacherId = int.Parse(Console.ReadLine());
+            string? inputTeacherId = Console.ReadLine();
+            if (!int.TryParse(inputTeacherId, out int teacherId))
+            {
+                Console.WriteLine("Invalid teacher ID");
+                return;
+            }
 
             try
             {
@@ -517,11 +624,21 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine($"{(int)d} - {d}");
 
             Console.Write("Choose day: ");
-            int dayNumber = int.Parse(Console.ReadLine());
+            string? inputDayNumber = Console.ReadLine();
+            if (!int.TryParse(inputDayNumber, out int dayNumber))
+            {
+                Console.WriteLine("Invalid day number");
+                return;
+            }
             var day = (SchoolDay)dayNumber;
 
             Console.Write("Period: ");
-            int period = int.Parse(Console.ReadLine());
+            string? inputPeriod = Console.ReadLine();
+            if (!int.TryParse(inputPeriod, out int period))
+            {
+                Console.WriteLine("Invalid period");
+                return;
+            }
 
             try
             {
@@ -542,10 +659,20 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Schedule Id: ");
-            int scheduleId = int.Parse(Console.ReadLine());
+            string? inputScheduleId = Console.ReadLine();
+            if (!int.TryParse(inputScheduleId, out int scheduleId))
+            {
+                Console.WriteLine("Invalid schedule ID");
+                return;
+            }
 
             Console.Write("Year: ");
-            int year = int.Parse(Console.ReadLine());
+            string? inputYear = Console.ReadLine();
+            if (!int.TryParse(inputYear, out int year))
+            {
+                Console.WriteLine("Invalid year");
+                return;
+            }
 
             try
             {
@@ -564,7 +691,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Minimum average: ");
-            double minAvg = double.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!double.TryParse(input, out double minAvg))
+            {
+                Console.WriteLine("Invalid number");
+                return;
+            }
 
             try
             {
@@ -585,7 +717,12 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Dzheyda
             Console.Write("Maximum average: ");
-            double max = double.Parse(Console.ReadLine());
+            string? input = Console.ReadLine();
+            if (!double.TryParse(input, out double max))
+            {
+                Console.WriteLine("Invalid number");
+                return;
+            }
 
             try
             {
