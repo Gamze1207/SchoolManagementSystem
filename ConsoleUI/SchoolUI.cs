@@ -21,7 +21,6 @@ namespace SchoolManagementSystem.ConsoleUI
         public void Run()
         {
             bool running = true;
-
             while (running)
             {
                 Menu();
