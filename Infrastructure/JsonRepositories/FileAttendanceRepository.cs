@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolManagementSystem.Infrastructure
+namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 {
     public class FileAttendanceRepository : IAttendanceRepository
     {

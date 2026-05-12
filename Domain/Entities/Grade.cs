@@ -10,9 +10,12 @@ namespace SchoolManagementSystem.Domain.Entities
     {
         public int Id { get; private set; }
         public int Value { get; private set; }
+        public int StudentId { get; private set; }
         public Student Student { get; private set; }
+        public int SubjectId { get; private set; }
         public Subject Subject { get; private set; }
 
+        public Grade() { }
         public Grade(int id, int value, Student student, Subject subject)
         {
             if (id < 0)

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SchoolManagementSystem.Infrastructure
+namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 {
     public class FileStorage
     {

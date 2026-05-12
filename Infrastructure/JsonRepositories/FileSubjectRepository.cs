@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SchoolManagementSystem.Application.Interfaces;
 using SchoolManagementSystem.Domain.Entities;
 
-namespace SchoolManagementSystem.Infrastructure
+namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 {
     public class FileSubjectRepository : ISubjectRepository
     {

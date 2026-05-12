@@ -11,8 +11,8 @@ namespace SchoolManagementSystem.Domain.Entities
     {
         public int Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
-        public List<Student> students { get; set; }
-        public List<TeacherSchedule> schedules { get; set; }
+        public List<Student> students { get; set; } = new List<Student>();
+        public List<TeacherSchedule> schedules { get; set; }= new List<TeacherSchedule>();
 
         public Class(int id, string name)
         {

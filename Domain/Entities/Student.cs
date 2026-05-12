@@ -12,11 +12,13 @@ namespace SchoolManagementSystem.Domain.Entities
         public int Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public int Age { get; private set; }
+        public int ClassId { get; private set; }
         public Class Class { get; private set; }
 
-        public List<Grade> grades { get; set; }
-        public List<Attendance> attendances { get; set; }
+        public List<Grade> grades { get; set; } = new List<Grade>();
+        public List<Attendance> attendances { get; set; } = new List<Attendance>();
 
+        public Student() { }
         public Student(int id, string name, int age, Class _class)
         {
             if (id < 0)
