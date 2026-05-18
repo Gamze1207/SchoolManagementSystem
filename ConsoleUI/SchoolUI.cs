@@ -762,7 +762,7 @@ namespace SchoolManagementSystem.ConsoleUI
             Console.WriteLine("18) Set schedule year.");
             Console.WriteLine("19) Get top students.");
             Console.WriteLine("20) Get problem students.");
-            Console.WriteLine("x. Exit");
+            Console.WriteLine("x) Exit");
         }
     }
 }
