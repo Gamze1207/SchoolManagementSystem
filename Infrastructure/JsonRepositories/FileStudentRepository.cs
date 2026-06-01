@@ -30,7 +30,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             foreach (var student in db.Students)
             {
-                if (student.Id == id)
+                //if (student.Id == id)
                     return student;
             }
 
@@ -44,7 +44,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             var db = storage.Load();
 
-           
+            /*
             if (student.Id == 0)
             {
                 var newStudent = new Student(
@@ -95,7 +95,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 if (!found)
                     throw new KeyNotFoundException($"Student not found: {student.Id}");
             }
-
+            */
             storage.Save(db);
         }
 

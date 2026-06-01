@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             foreach (var attendance in db.Attendances)
             {
-                if (attendance.Id == id)
+                //if (attendance.Id == id)
                     return attendance;
             }
 
@@ -43,11 +43,10 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             var db = storage.Load();
 
-            
+            /*
             if (attendance.Id == 0)
             {
                 var newAttendance = new Attendance(
-                    db.NextId++,
                     attendance.Student,
                     attendance.Date,
                     attendance.Status
@@ -65,7 +64,6 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                     if (db.Attendances[i].Id == attendance.Id)
                     {
                         var updated = new Attendance(
-                            attendance.Id,
                             attendance.Student,
                             attendance.Date,
                             attendance.Status
@@ -80,7 +78,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 if (!found)
                     throw new KeyNotFoundException($"Attendance not found: {attendance.Id}");
             }
-
+            */
             storage.Save(db);
         }
 

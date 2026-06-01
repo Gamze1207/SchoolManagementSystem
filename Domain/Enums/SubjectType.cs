@@ -10,14 +10,19 @@ namespace SchoolManagementSystem.Domain.Enums
     {
         Math,
         English,
+        German,
+        Russian,
         History,
         Biology,
         Chemistry,
         Physics,
         Geography,
         Literature,
+        ComputerScience,
+        InformationTechnology,
         Art,
         Music,
-        PE
+        PE,
+        Philosophy
     }
 }

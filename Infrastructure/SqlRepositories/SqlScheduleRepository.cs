@@ -29,13 +29,13 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         {
             return _db.Schedules
                 .Include(s => s.Schedules)
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefault();//s => s.Id == id
         }
 
         public void Save(Schedule schedule)
         {
             var existing = _db.Schedules
-                .FirstOrDefault(s => s.Id == schedule.Id);
+                .FirstOrDefault();//s => s.Id == schedule.Id
 
             if (existing == null)
             {

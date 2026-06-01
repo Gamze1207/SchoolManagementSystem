@@ -27,12 +27,16 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
         public Attendance GetById(int id)
         {
+            /*
             return _db.Attendances
                 .Include(a => a.Student)
                 .FirstOrDefault(a => a.Id == id);
+            */
+            return null;
         }
         public void Save(Attendance attendance)
         {
+            /*
             if (attendance.Id == 0)
             {
                 _db.Attendances.Add(attendance);
@@ -41,6 +45,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             {
                 _db.Attendances.Update(attendance);
             }
+            */
             _db.SaveChanges();
         }
     }

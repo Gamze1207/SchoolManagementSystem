@@ -30,7 +30,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             foreach (var c in db.Classes)
             {
-                if (c.Id == id)
+                //if (c.Id == id)
                     return c;
             }
 
@@ -43,11 +43,10 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 throw new ArgumentNullException(nameof(_class));
 
             var db = storage.Load();
-
+            /*
             if (_class.Id == 0)
             {
                 var newClass = new Class(
-                    db.NextId++,
                     _class.Name
                 );
 
@@ -104,6 +103,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                     throw new KeyNotFoundException($"Class not found: {_class.Id}");
 
             }
+            */
             storage.Save(db);
         }
     }

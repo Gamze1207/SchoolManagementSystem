@@ -31,13 +31,13 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             return _db.Grades
                 .Include(g => g.Student)
                 .Include(g => g.Subject)
-                .FirstOrDefault(g => g.Id == id);
+                .FirstOrDefault();//g => g.Id == id
         }
 
         public void Save(Grade grade)
         {
             var existingGrade = _db.Grades
-                .FirstOrDefault(g => g.Id == grade.Id);
+                .FirstOrDefault();//g => g.Id == id
 
             if (existingGrade == null)
             {

@@ -37,7 +37,7 @@ namespace SchoolManagementSystem.Application
         public void AddStudent(string name, int age, Class schoolClass)
         {
             //Gamze
-            var student = new Student(0,name, age, schoolClass);
+            var student = new Student(name, age, schoolClass);
             studentRepository.Save(student);
         }
 
@@ -45,7 +45,7 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             var existing = studentRepository.GetById(id);
-            var updated = new Student(id, name, age, schoolClass);
+            var updated = new Student(name, age, schoolClass);
             foreach (var item in existing.grades)
             {
                 updated.AddGrade(item);
@@ -60,7 +60,7 @@ namespace SchoolManagementSystem.Application
         public void AddTeacher(string name, List<SubjectType> subjects)
         {
             //Dzheyda
-            var teacher = new Teacher(0, name);
+            var teacher = new Teacher(name);
             if (subjects != null)
                 foreach (var s in subjects)
                     teacher.AddSubject(s);
@@ -77,7 +77,7 @@ namespace SchoolManagementSystem.Application
         {
             //Dzheyda
             var student = studentRepository.GetById(studentId);
-            var grade = new Grade(0, value, student, subject);
+            var grade = new Grade(value, student, subject);
             student.AddGrade(grade);
             studentRepository.Save(student);
         }
@@ -92,10 +92,12 @@ namespace SchoolManagementSystem.Application
         {
             //Dzheyda
             var student = studentRepository.GetById(studentId);
+            /*
             var index = student.grades.FindIndex(g => g.Id == updatedGrade.Id);
             if (index == -1)
                 throw new KeyNotFoundException("Grade not found");
             student.grades[index] = updatedGrade;
+            */
             studentRepository.Save(student);
         }
 
@@ -122,7 +124,7 @@ namespace SchoolManagementSystem.Application
         public void AddClass(string name)
         {
             //Dzheyda 
-            var schoolClass = new Class(0, name);
+            var schoolClass = new Class(name);
             classRepository.Save(schoolClass);
 
         }
@@ -156,7 +158,7 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             var student = studentRepository.GetById(studentId);
-            var attendance = new Attendance(0, student, date, status);
+            var attendance = new Attendance(student, date, status);
             attendanceRepository.Save(attendance);
             student.AddAttendance(attendance);
             studentRepository.Save(student);
@@ -202,10 +204,13 @@ namespace SchoolManagementSystem.Application
         public IEnumerable<Teacher> GetFreeTeachers(SchoolDay day, int period)
         {
             //Gamze
+            /*
             return teacherRepository.GetAll().Where(t => !t.schedules.Any(s =>
             s.Class != null && s.Hours > 0 && s.Class.schedules.Any(c =>
             c.Id == s.Id && c.Class.schedules.Any(slot => 
             slot.Id == s.Id && slot.Class.schedules.Any()))));
+            */
+            return null;
         }
 
         public void SetScheduleYear(int scheduleId, int year)
@@ -214,7 +219,6 @@ namespace SchoolManagementSystem.Application
             var schedule = teacherScheduleRepository.GetById(scheduleId);
 
             var updated = new TeacherSchedule(
-                schedule.Id,
                 schedule.Teacher,
                 schedule.Class,
                 schedule.Subject,

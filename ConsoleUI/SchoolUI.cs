@@ -114,7 +114,7 @@ namespace SchoolManagementSystem.ConsoleUI
             var classes = schoolService.GetAllClasses();
 
             foreach (var c in classes)
-                Console.WriteLine($"{c.Id} - {c.Name}");
+                //Console.WriteLine($"{c.Id} - {c.Name}");
 
             Console.Write("Class ID: ");
             string? inputClassId = Console.ReadLine();
@@ -126,8 +126,10 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
+                /*
                 var schoolClass = classes.First(c => c.Id == classId);
                 schoolService.AddStudent(name, age, schoolClass);
+                */
                 Console.WriteLine("Student added!");
             }
             catch (Exception ex)
@@ -162,7 +164,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             var classes = schoolService.GetAllClasses();
             foreach (var c in classes)
-                Console.WriteLine($"{c.Id} - {c.Name}");
+                //Console.WriteLine($"{c.Id} - {c.Name}");
 
             Console.Write("New class ID: ");
             string? inputClassId = Console.ReadLine();
@@ -174,8 +176,10 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
+                /*
                 var schoolClass = classes.First(c => c.Id == classId);
                 schoolService.UpdateStudent(id, name, age, schoolClass);
+                */
                 Console.WriteLine("Student updated!");
             }
             catch (Exception ex)
@@ -235,7 +239,7 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var subjectType = (SubjectType)typeNumber;
-                var subject = new Subject(0, subjectType);
+                var subject = new Subject(subjectType);
 
                 schoolService.AddSubject(subject);
                 Console.WriteLine("Subject added!");
@@ -272,7 +276,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                schoolService.AddGrade(studentId, value, new Subject(0, type));
+                schoolService.AddGrade(studentId, value, new Subject(type));
                 Console.WriteLine("Grade added!");
             }
             catch (Exception ex)
@@ -316,8 +320,8 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var student = schoolService.GetStudentById(studentId);
-                var subject = new Subject(0, type);
-                var grade = new Grade(gradeId, value, student, subject);
+                var subject = new Subject(type);
+                var grade = new Grade(value, student, subject);
                 schoolService.UpdateGrade(studentId, grade);
                 Console.WriteLine("Grade updated!");
             }
@@ -599,7 +603,7 @@ namespace SchoolManagementSystem.ConsoleUI
                 foreach (var s in schedules)
                 {
                     Console.WriteLine(
-                        $"{s.Id} | " +
+                        //$"{s.Id} | " +
                         $"{s.Slot.Day} Period {s.Slot.Period} | " +
                         $"Teacher: {s.Schedules.Teacher.Name} | " +
                         $"Class: {s.Schedules.Class.Name} | " +
@@ -642,9 +646,10 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var freeTeachers = schoolService.GetFreeTeachers(day, period);
-
+                /*
                 foreach (var t in freeTeachers)
                     Console.WriteLine($"{t.Id} - {t.Name}");
+                */
             }
             catch (Exception ex)
             {
@@ -700,9 +705,10 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var students = schoolService.GetTopStudents(minAvg);
-
+                /*
                 foreach (var s in students)
                     Console.WriteLine($"{s.Id} - {s.Name} (Avg: {s.grades.Average(g => g.Value)})");
+                */
             }
             catch (Exception ex)
             {

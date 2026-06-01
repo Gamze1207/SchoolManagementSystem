@@ -30,7 +30,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             foreach (var schedule in db.TeacherSchedules)
             {
-                if (schedule.Id == id)
+                //if (schedule.Id == id)
                     return schedule;
             }
 
@@ -43,11 +43,10 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 throw new ArgumentNullException(nameof(_schedule));
 
             var db = storage.Load();
-
+            /*
             if (_schedule.Id == 0)
             {
                 var newSchedule = new TeacherSchedule(
-                    db.NextId++,
                     _schedule.Teacher,
                     _schedule.Class,
                     _schedule.Subject,
@@ -84,7 +83,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 if (!found)
                     throw new KeyNotFoundException($"TeacherSchedule not found: {_schedule.Id}");
             }
-
+            */
             storage.Save(db);
         }
 

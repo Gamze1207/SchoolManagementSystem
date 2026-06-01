@@ -29,14 +29,14 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         {
             return _db.Subjects
                 .Include(s => s.Teachers)
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefault();//s => s.Id == id
         }
 
         public void Save(Subject subject)
         {
             var existing = _db.Subjects
                 .Include(s => s.Teachers)
-                .FirstOrDefault(s => s.Id == subject.Id);
+                .FirstOrDefault();//s => s.Id == subject.Id
 
             if (existing == null)
             {

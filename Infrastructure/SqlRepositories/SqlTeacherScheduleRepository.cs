@@ -28,10 +28,13 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
         public TeacherSchedule? GetById(int id)
         {
+            /*
             return _db.TeacherSchedules
                 .Include(t => t.Teacher)
                 .Include(t => t.Class)
                 .FirstOrDefault(t => t.Id == id);
+            */
+            return null;
         }
 
         public void Save(TeacherSchedule schedule)
@@ -39,7 +42,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             var existing = _db.TeacherSchedules
                 .Include(t => t.Teacher)
                 .Include(t => t.Class)
-                .FirstOrDefault(t => t.Id == schedule.Id);
+                .FirstOrDefault();//t => t.Id == schedule.Id
 
             if (existing == null)
             {

@@ -31,15 +31,19 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
         public Student GetById(int id)
         {
+            /*
             return _db.Students
                 .Include(s => s.Class)
                 .Include(s => s.grades)
                 .Include(s => s.attendances)
                 .FirstOrDefault(s => s.Id == id);
+            */
+            return null;
         }
 
         public void Save(Student student)
         {
+            /*
             if (student.Id == 0)
             {
                 _db.Students.Add(student);
@@ -48,7 +52,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             {
                 _db.Students.Update(student);
             }
-
+            */
             _db.SaveChanges();
         }
     }

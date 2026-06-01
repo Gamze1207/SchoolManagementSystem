@@ -9,19 +9,15 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Class
     {
-        public int Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public List<Student> students { get; set; } = new List<Student>();
         public List<TeacherSchedule> schedules { get; set; }= new List<TeacherSchedule>();
 
-        public Class(int id, string name)
+        public Class(string name)
         {
-            if (id < 0)
-                throw new ArgumentException("Id must be positive");
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Class name is required");
 
-            Id = id;
             Name = name;
             students = new List<Student>();
             schedules = new List<TeacherSchedule>();

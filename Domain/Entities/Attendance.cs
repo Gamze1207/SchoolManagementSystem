@@ -9,17 +9,14 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Attendance
     {
-        public int Id { get; private set; }
         public int StudentId { get; private set; }
         public Student Student { get; private set; }
         public DateTime Date { get; private set; }
         public AttendanceType Status { get; private set; }
 
         public Attendance() { }
-        public Attendance(int id, Student student, DateTime date, AttendanceType status)
+        public Attendance(Student student, DateTime date, AttendanceType status)
         {
-            if (id < 0)
-                throw new ArgumentException("Id must be positive");
             if (student == null)
                 throw new ArgumentNullException("Student must be not be null");
             if (date == default)
@@ -27,7 +24,6 @@ namespace SchoolManagementSystem.Domain.Entities
             if (status == default)
                 throw new ArgumentException("Attendance status is required");
 
-            Id = id;
             Student = student;
             Date = date;
             Status = status;

@@ -9,7 +9,6 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Student
     {
-        public int Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public int Age { get; private set; }
         public int ClassId { get; private set; }
@@ -19,18 +18,13 @@ namespace SchoolManagementSystem.Domain.Entities
         public List<Attendance> attendances { get; set; } = new List<Attendance>();
 
         public Student() { }
-        public Student(int id, string name, int age, Class _class)
+        public Student(string name, int age, Class _class)
         {
-            if (id < 0)
-                throw new ArgumentException("Id must be positive");
-
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Student name is required");
+            if (age < 6)
+                throw new ArgumentException("Age must be greater than or equal to 6");
 
-            if (age <= 0)
-                throw new ArgumentException("Age must be greater than zero");
-
-            Id = id;
             Name = name;
             Age = age;
             Class = _class;

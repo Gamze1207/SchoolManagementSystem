@@ -24,14 +24,17 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         }
         public Class? GetById(int id)
         {
+            /*
             return _db.Classes
                 .FirstOrDefault(c => c.Id == id);
+            */
+            return null;
         }
 
         public void Save(Class classEntity)
         {
             var existingClass = _db.Classes
-                .FirstOrDefault(c => c.Id == classEntity.Id);
+                .FirstOrDefault();//c => c.Id == classEntity.Id
 
             if (existingClass == null)
             {

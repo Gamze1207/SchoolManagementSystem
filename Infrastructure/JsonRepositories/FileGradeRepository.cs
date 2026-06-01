@@ -30,7 +30,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             foreach (var grade in db.Grades)
             {
-                if (grade.Id == id)
+                //if (grade.Id == id)
                     return grade;
             }
 
@@ -44,11 +44,10 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             var db = storage.Load();
 
-
+            /*
             if (_grade.Id == 0)
             {
                 var newGrade = new Grade(
-                    db.NextId++,
                     _grade.Value,
                     _grade.Student,
                     _grade.Subject
@@ -81,7 +80,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 if (!found)
                     throw new KeyNotFoundException($"Grade not found: {_grade.Id}");
             }
-
+            */
             storage.Save(db);
 
 

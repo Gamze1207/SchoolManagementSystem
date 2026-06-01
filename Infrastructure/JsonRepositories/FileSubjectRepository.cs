@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
 
             foreach (var subject in db.Subjects)
             {
-                if (subject.Id == id)
+                //if (subject.Id == id)
                     return subject;
             }
 
@@ -42,7 +42,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 throw new ArgumentNullException(nameof(subject));
 
             var db = storage.Load();
-
+            /*
             if (subject.Id == 0)
             {
                 var newSubject = new Subject(
@@ -86,7 +86,7 @@ namespace SchoolManagementSystem.Infrastructure.JsonRepositories
                 if (!found)
                     throw new KeyNotFoundException($"Subject not found: {subject.Id}");
             }
-
+            */
             storage.Save(db);
         }
 
