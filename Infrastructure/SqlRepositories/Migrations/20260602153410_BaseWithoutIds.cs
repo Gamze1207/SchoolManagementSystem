@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchoolManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseSchoolDb : Migration
+    public partial class BaseWithoutIds : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,26 +15,22 @@ namespace SchoolManagementSystem.Migrations
                 name: "Classes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Classes", x => x.Id);
+                    table.PrimaryKey("PK_Classes", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subjects", x => x.Id);
+                    table.PrimaryKey("PK_Subjects", x => x.Type);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,16 +41,17 @@ namespace SchoolManagementSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    ClassId = table.Column<int>(type: "int", nullable: false)
+                    ClassId = table.Column<int>(type: "int", nullable: false),
+                    ClassName = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Classes_ClassId",
-                        column: x => x.ClassId,
+                        name: "FK_Students_Classes_ClassName",
+                        column: x => x.ClassName,
                         principalTable: "Classes",
-                        principalColumn: "Id",
+                        principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -62,20 +59,18 @@ namespace SchoolManagementSystem.Migrations
                 name: "Teachers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     subjects = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubjectId = table.Column<int>(type: "int", nullable: true)
+                    SubjectType = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teachers", x => x.Id);
+                    table.PrimaryKey("PK_Teachers", x => x.Name);
                     table.ForeignKey(
-                        name: "FK_Teachers_Subjects_SubjectId",
-                        column: x => x.SubjectId,
+                        name: "FK_Teachers_Subjects_SubjectType",
+                        column: x => x.SubjectType,
                         principalTable: "Subjects",
-                        principalColumn: "Id");
+                        principalColumn: "Type");
                 });
 
             migrationBuilder.CreateTable(
@@ -105,9 +100,10 @@ namespace SchoolManagementSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<double>(type: "float", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
-                    SubjectId = table.Column<int>(type: "int", nullable: false)
+                    SubjectId = table.Column<int>(type: "int", nullable: false),
+                    SubjectType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,10 +115,10 @@ namespace SchoolManagementSystem.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Grades_Subjects_SubjectId",
-                        column: x => x.SubjectId,
+                        name: "FK_Grades_Subjects_SubjectType",
+                        column: x => x.SubjectType,
                         principalTable: "Subjects",
-                        principalColumn: "Id",
+                        principalColumn: "Type",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -133,7 +129,9 @@ namespace SchoolManagementSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TeacherId = table.Column<int>(type: "int", nullable: false),
+                    TeacherName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClassId = table.Column<int>(type: "int", nullable: false),
+                    ClassName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Subject = table.Column<int>(type: "int", nullable: false),
                     Hours = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false)
@@ -142,16 +140,16 @@ namespace SchoolManagementSystem.Migrations
                 {
                     table.PrimaryKey("PK_TeacherSchedules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TeacherSchedules_Classes_ClassId",
-                        column: x => x.ClassId,
+                        name: "FK_TeacherSchedules_Classes_ClassName",
+                        column: x => x.ClassName,
                         principalTable: "Classes",
-                        principalColumn: "Id",
+                        principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeacherSchedules_Teachers_TeacherId",
-                        column: x => x.TeacherId,
+                        name: "FK_TeacherSchedules_Teachers_TeacherName",
+                        column: x => x.TeacherName,
                         principalTable: "Teachers",
-                        principalColumn: "Id",
+                        principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -162,8 +160,9 @@ namespace SchoolManagementSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TeacherScheduleId = table.Column<int>(type: "int", nullable: false),
-                    Slot_Day = table.Column<int>(type: "int", nullable: false),
-                    Slot_Period = table.Column<int>(type: "int", nullable: false)
+                    SlotDay = table.Column<int>(type: "int", nullable: false),
+                    SlotPeriod = table.Column<int>(type: "int", nullable: false),
+                    TeacherScheduleId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -174,6 +173,11 @@ namespace SchoolManagementSystem.Migrations
                         principalTable: "TeacherSchedules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Schedules_TeacherSchedules_TeacherScheduleId1",
+                        column: x => x.TeacherScheduleId1,
+                        principalTable: "TeacherSchedules",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -187,34 +191,42 @@ namespace SchoolManagementSystem.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grades_SubjectId",
+                name: "IX_Grades_SubjectType",
                 table: "Grades",
-                column: "SubjectId");
+                column: "SubjectType");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_TeacherScheduleId",
                 table: "Schedules",
-                column: "TeacherScheduleId");
+                column: "TeacherScheduleId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_ClassId",
+                name: "IX_Schedules_TeacherScheduleId1",
+                table: "Schedules",
+                column: "TeacherScheduleId1",
+                unique: true,
+                filter: "[TeacherScheduleId1] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_ClassName",
                 table: "Students",
-                column: "ClassId");
+                column: "ClassName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teachers_SubjectId",
+                name: "IX_Teachers_SubjectType",
                 table: "Teachers",
-                column: "SubjectId");
+                column: "SubjectType");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeacherSchedules_ClassId",
+                name: "IX_TeacherSchedules_ClassName",
                 table: "TeacherSchedules",
-                column: "ClassId");
+                column: "ClassName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeacherSchedules_TeacherId",
+                name: "IX_TeacherSchedules_TeacherName",
                 table: "TeacherSchedules",
-                column: "TeacherId");
+                column: "TeacherName");
         }
 
         /// <inheritdoc />

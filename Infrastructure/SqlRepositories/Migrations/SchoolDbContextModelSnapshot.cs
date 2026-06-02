@@ -48,17 +48,10 @@ namespace SchoolManagementSystem.Migrations
 
             modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.Class", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("Classes");
                 });
@@ -77,14 +70,17 @@ namespace SchoolManagementSystem.Migrations
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Value")
+                    b.Property<int>("SubjectType")
                         .HasColumnType("int");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectType");
 
                     b.ToTable("Grades");
                 });
@@ -100,9 +96,17 @@ namespace SchoolManagementSystem.Migrations
                     b.Property<int>("TeacherScheduleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TeacherScheduleId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherScheduleId");
+                    b.HasIndex("TeacherScheduleId")
+                        .IsUnique();
+
+                    b.HasIndex("TeacherScheduleId1")
+                        .IsUnique()
+                        .HasFilter("[TeacherScheduleId1] IS NOT NULL");
 
                     b.ToTable("Schedules");
                 });
@@ -121,55 +125,46 @@ namespace SchoolManagementSystem.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("ClassName");
 
                     b.ToTable("Students");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.Subject", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Type");
 
                     b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.Teacher", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("SubjectId")
+                    b.Property<int?>("SubjectType")
                         .HasColumnType("int");
 
                     b.PrimitiveCollection<string>("subjects")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectType");
 
                     b.ToTable("Teachers");
                 });
@@ -185,6 +180,10 @@ namespace SchoolManagementSystem.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Hours")
                         .HasColumnType("int");
 
@@ -194,14 +193,18 @@ namespace SchoolManagementSystem.Migrations
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
+                    b.Property<string>("TeacherName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("ClassName");
 
-                    b.HasIndex("TeacherId");
+                    b.HasIndex("TeacherName");
 
                     b.ToTable("TeacherSchedules");
                 });
@@ -227,7 +230,7 @@ namespace SchoolManagementSystem.Migrations
 
                     b.HasOne("SchoolManagementSystem.Domain.Entities.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("SubjectType")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -239,10 +242,14 @@ namespace SchoolManagementSystem.Migrations
             modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.Schedule", b =>
                 {
                     b.HasOne("SchoolManagementSystem.Domain.Entities.TeacherSchedule", "Schedules")
-                        .WithMany()
-                        .HasForeignKey("TeacherScheduleId")
+                        .WithOne()
+                        .HasForeignKey("SchoolManagementSystem.Domain.Entities.Schedule", "TeacherScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SchoolManagementSystem.Domain.Entities.TeacherSchedule", null)
+                        .WithOne("Schedules")
+                        .HasForeignKey("SchoolManagementSystem.Domain.Entities.Schedule", "TeacherScheduleId1");
 
                     b.OwnsOne("SchoolManagementSystem.Domain.ValueObjects.ScheduleSlot", "Slot", b1 =>
                         {
@@ -250,10 +257,12 @@ namespace SchoolManagementSystem.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<int>("Day")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("SlotDay");
 
                             b1.Property<int>("Period")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("SlotPeriod");
 
                             b1.HasKey("ScheduleId");
 
@@ -273,7 +282,7 @@ namespace SchoolManagementSystem.Migrations
                 {
                     b.HasOne("SchoolManagementSystem.Domain.Entities.Class", "Class")
                         .WithMany("students")
-                        .HasForeignKey("ClassId")
+                        .HasForeignKey("ClassName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -284,20 +293,20 @@ namespace SchoolManagementSystem.Migrations
                 {
                     b.HasOne("SchoolManagementSystem.Domain.Entities.Subject", null)
                         .WithMany("Teachers")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectType");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.TeacherSchedule", b =>
                 {
                     b.HasOne("SchoolManagementSystem.Domain.Entities.Class", "Class")
                         .WithMany("schedules")
-                        .HasForeignKey("ClassId")
+                        .HasForeignKey("ClassName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SchoolManagementSystem.Domain.Entities.Teacher", "Teacher")
                         .WithMany("schedules")
-                        .HasForeignKey("TeacherId")
+                        .HasForeignKey("TeacherName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -328,6 +337,12 @@ namespace SchoolManagementSystem.Migrations
             modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.Teacher", b =>
                 {
                     b.Navigation("schedules");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Domain.Entities.TeacherSchedule", b =>
+                {
+                    b.Navigation("Schedules")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

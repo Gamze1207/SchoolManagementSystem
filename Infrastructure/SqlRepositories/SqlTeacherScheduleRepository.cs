@@ -28,21 +28,22 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
         public TeacherSchedule? GetById(int id)
         {
-            /*
             return _db.TeacherSchedules
                 .Include(t => t.Teacher)
                 .Include(t => t.Class)
-                .FirstOrDefault(t => t.Id == id);
-            */
-            return null;
+                .FirstOrDefault(t => EF.Property<int>(t, "Id") == id);
         }
 
         public void Save(TeacherSchedule schedule)
         {
-            var existing = _db.TeacherSchedules
-                .Include(t => t.Teacher)
-                .Include(t => t.Class)
-                .FirstOrDefault();//t => t.Id == schedule.Id
+            var entry = _db.Entry(schedule);
+            int currentId = entry.State != EntityState.Detached ? entry.Property<int>("Id").CurrentValue : 0;
+
+            TeacherSchedule? existing = null;
+            if (currentId != 0)
+            {
+                existing = _db.TeacherSchedules.FirstOrDefault(t => EF.Property<int>(t, "Id") == currentId);
+            }
 
             if (existing == null)
             {
@@ -50,9 +51,10 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             }
             else
             {
-                _db.Entry(existing)
-                    .CurrentValues
-                    .SetValues(schedule);
+                _db.Entry(existing).CurrentValues.SetValues(schedule);
+
+                _db.Entry(existing).Reference(t => t.Teacher).CurrentValue = schedule.Teacher;
+                _db.Entry(existing).Reference(t => t.Class).CurrentValue = schedule.Class;
             }
 
             _db.SaveChanges();

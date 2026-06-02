@@ -27,25 +27,27 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
         public Attendance GetById(int id)
         {
-            /*
             return _db.Attendances
                 .Include(a => a.Student)
-                .FirstOrDefault(a => a.Id == id);
-            */
-            return null;
+                .FirstOrDefault(a => EF.Property<int>(a, "Id") == id);
         }
         public void Save(Attendance attendance)
         {
-            /*
-            if (attendance.Id == 0)
+            var entry = _db.Entry(attendance);
+
+            if (entry.State == EntityState.Detached)
             {
-                _db.Attendances.Add(attendance);
+                var id = entry.Property<int>("Id").CurrentValue;
+                if (id == 0)
+                {
+                    _db.Attendances.Add(attendance);
+                }
+                else
+                {
+                    _db.Attendances.Update(attendance);
+                }
             }
-            else
-            {
-                _db.Attendances.Update(attendance);
-            }
-            */
+
             _db.SaveChanges();
         }
     }

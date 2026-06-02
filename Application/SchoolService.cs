@@ -45,6 +45,11 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             var existing = studentRepository.GetById(id);
+            if (existing == null) 
+            { 
+                throw new KeyNotFoundException("Student not found"); 
+            }
+
             var updated = new Student(name, age, schoolClass);
             foreach (var item in existing.grades)
             {
@@ -105,6 +110,10 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             var student = studentRepository.GetById(studentId);
+            if (student == null)
+            { 
+                throw new KeyNotFoundException("Student not found"); 
+            }
             if (student.grades.Count == 0)
             {
                 return 0;
@@ -117,6 +126,11 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             var student = studentRepository.GetById(studentId);
+            if (student == null)
+            { 
+                throw new KeyNotFoundException("Student not found"); 
+            }
+
             double avg = student.grades.Count==0?0:student.grades.Average(x => x.Value);
             return (student, student.grades, student.attendances, avg);
         }
@@ -137,8 +151,6 @@ namespace SchoolManagementSystem.Application
 
             schoolClass.AddStudent(student);
             classRepository.Save(schoolClass);
-
-            classRepository.Save(schoolClass);
             studentRepository.Save(student);
         }
 
@@ -151,13 +163,23 @@ namespace SchoolManagementSystem.Application
         public IReadOnlyList<Attendance> GetAbsences(int studentId)
         {
             //Gamze
-            return studentRepository.GetById(studentId).attendances;
+            var student = studentRepository.GetById(studentId);
+            if (student == null)
+            { 
+                throw new KeyNotFoundException("Student not found");
+            }
+            return student.attendances;
         }
 
         public void AddAttendance(int studentId, DateTime date, AttendanceType status)
         {
             //Gamze
             var student = studentRepository.GetById(studentId);
+            if (student == null) 
+            { 
+                throw new KeyNotFoundException("Student not found");
+            }
+
             var attendance = new Attendance(student, date, status);
             attendanceRepository.Save(attendance);
             student.AddAttendance(attendance);
@@ -204,13 +226,12 @@ namespace SchoolManagementSystem.Application
         public IEnumerable<Teacher> GetFreeTeachers(SchoolDay day, int period)
         {
             //Gamze
-            /*
-            return teacherRepository.GetAll().Where(t => !t.schedules.Any(s =>
-            s.Class != null && s.Hours > 0 && s.Class.schedules.Any(c =>
-            c.Id == s.Id && c.Class.schedules.Any(slot => 
-            slot.Id == s.Id && slot.Class.schedules.Any()))));
-            */
-            return null;
+            return teacherRepository.GetAll().Where(t => !t.schedules.Any(ts =>
+            scheduleRepository.GetAll().Any(s =>
+                s.Slot.Day == day &&
+                s.Slot.Period == period &&
+                s.Schedules != null &&
+                s.Schedules.Teacher.Name == t.Name)));
         }
 
         public void SetScheduleYear(int scheduleId, int year)
@@ -226,7 +247,7 @@ namespace SchoolManagementSystem.Application
                 year
             );
 
-            teacherScheduleRepository.Save( updated );
+            teacherScheduleRepository.Save(updated);
         }
 
         public IEnumerable<Student> GetTopStudents(double minAverage)

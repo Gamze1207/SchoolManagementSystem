@@ -1,4 +1,5 @@
-﻿using SchoolManagementSystem.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Application.Interfaces;
 using SchoolManagementSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -24,17 +25,18 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         }
         public Class? GetById(int id)
         {
-            /*
             return _db.Classes
-                .FirstOrDefault(c => c.Id == id);
-            */
-            return null;
+                .Include(c => c.students)
+                .Include(c => c.schedules)
+                .FirstOrDefault(c => EF.Property<int>(c, "Id") == id);
         }
 
         public void Save(Class classEntity)
         {
             var existingClass = _db.Classes
-                .FirstOrDefault();//c => c.Id == classEntity.Id
+                .Include(c => c.students)
+                .Include(c => c.schedules)
+                .FirstOrDefault(c => c.Name == classEntity.Name);
 
             if (existingClass == null)
             {
