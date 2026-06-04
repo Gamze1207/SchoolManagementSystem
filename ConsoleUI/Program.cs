@@ -12,7 +12,7 @@ namespace SchoolManagementSystem.ConsoleUI
         static void Main(string[] args)
         {
             var options = new DbContextOptionsBuilder<SchoolDbContext>()
-               .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SchoolDb;TrustServerCertificate=False;Integrated Security=True;")
+               .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SchoolDb;TrustServerCertificate=False;Integrated Security=True;TrustServerCertificate=True;")
                .Options;
 
             using var db = new SchoolDbContext(options);

@@ -26,6 +26,7 @@ namespace SchoolManagementSystem.Domain.Entities
                 throw new ArgumentException("Attendance status is required");
 
             Student = student;
+            StudentId = student.Id;
             Date = date;
             Status = status;
         }

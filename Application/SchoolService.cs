@@ -224,12 +224,12 @@ namespace SchoolManagementSystem.Application
         public IEnumerable<Teacher> GetFreeTeachers(SchoolDay day, int period)
         {
             //Gamze
-            return teacherRepository.GetAll().Where(t => !t.schedules.Any(ts =>
-            scheduleRepository.GetAll().Any(s =>
-                s.Slot.Day == day &&
-                s.Slot.Period == period &&
-                s.Schedules != null &&
-                s.Schedules.Teacher.Name == t.Name)));
+            var busyTeacherIds = scheduleRepository.GetAll()
+                .Where(s => s.Slot.Day == day && s.Slot.Period == period)
+                .Select(s => s.Schedules.TeacherId)
+                .ToHashSet();
+            return teacherRepository.GetAll()
+                .Where(t => !busyTeacherIds.Contains(t.Id));
         }
 
         public void SetScheduleYear(int scheduleId, int year)

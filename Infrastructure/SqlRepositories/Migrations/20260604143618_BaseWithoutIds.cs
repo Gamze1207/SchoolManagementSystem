@@ -105,7 +105,7 @@ namespace SchoolManagementSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<double>(type: "float", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     SubjectId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -194,7 +194,8 @@ namespace SchoolManagementSystem.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_TeacherScheduleId",
                 table: "Schedules",
-                column: "TeacherScheduleId");
+                column: "TeacherScheduleId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_ClassId",

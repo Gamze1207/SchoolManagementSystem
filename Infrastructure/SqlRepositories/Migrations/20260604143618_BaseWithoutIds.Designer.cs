@@ -12,7 +12,7 @@ using SchoolManagementSystem.Infrastructure.SqlRepositories;
 namespace SchoolManagementSystem.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    [Migration("20260604112708_BaseWithoutIds")]
+    [Migration("20260604143618_BaseWithoutIds")]
     partial class BaseWithoutIds
     {
         /// <inheritdoc />

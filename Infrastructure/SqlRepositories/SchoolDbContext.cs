@@ -21,7 +21,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
        => optionsBuilder.UseSqlServer(
-           "Server=(localdb)\\MSSQLLocalDB;Database=SchoolDb;Integrated Security=True;");
+           "Server=(localdb)\\MSSQLLocalDB;Database=SchoolDb;Integrated Security=True;TrustServerCertificate=True;");
 
 
         public DbSet<Attendance> Attendances { get; set; }

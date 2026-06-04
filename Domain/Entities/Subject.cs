@@ -15,7 +15,7 @@ namespace SchoolManagementSystem.Domain.Entities
 
         public Subject(SubjectType type)
         {
-            if (type == default)
+            if (type==default)
                 throw new ArgumentException("Subject type is required");
 
             Type = type;

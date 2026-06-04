@@ -28,7 +28,7 @@ namespace SchoolManagementSystem.Domain.Entities
                 throw new ArgumentNullException("Class must be not be null");
             if (subject == default)
                 throw new ArgumentException("Subject type is required");
-            if (hours < 0 && hours > 22)
+            if (hours < 0 || hours > 22)
                 throw new ArgumentException("Hours must be between 0 and 22");
             if (year < 2000 || year > DateTime.Now.Year + 1)
                 throw new ArgumentException("Year must be between 2000 and next year");

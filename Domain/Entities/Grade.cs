@@ -18,7 +18,7 @@ namespace SchoolManagementSystem.Domain.Entities
         public Grade() { }
         public Grade(double value, Student student, Subject subject)
         {
-            if (value < 2 && value > 6)
+            if (value < 2 || value > 6)
                 throw new ArgumentException("Grade value must be between 2 and 6");
             if (student == null)
                 throw new ArgumentNullException("Student must be not be null");

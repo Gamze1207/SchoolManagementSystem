@@ -136,8 +136,6 @@ namespace SchoolManagementSystem.ConsoleUI
             }
 
             Console.ReadLine();
-
-            Console.ReadLine();
         }
 
         private void UpdateStudent()
@@ -228,7 +226,8 @@ namespace SchoolManagementSystem.ConsoleUI
 
             Console.Write("Type number: ");
             string? input = Console.ReadLine();
-            if (!int.TryParse(input, out int typeNumber))
+            if (!int.TryParse(input, out int typeNumber) ||
+                !Enum.IsDefined(typeof(SubjectType), typeNumber))
             {
                 Console.WriteLine("Invalid type number");
                 return;

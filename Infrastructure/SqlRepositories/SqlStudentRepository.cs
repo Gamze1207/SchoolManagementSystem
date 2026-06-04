@@ -52,9 +52,5 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             _db.SaveChanges();
         }
     }
-
-
-
-
 }
 
