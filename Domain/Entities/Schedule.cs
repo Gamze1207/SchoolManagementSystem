@@ -9,6 +9,7 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Schedule
     {
+        public int Id { get; private set; }
         public int TeacherScheduleId { get; private set; }
         public TeacherSchedule Schedules { get; private set; }
         public ScheduleSlot Slot { get; private set; }

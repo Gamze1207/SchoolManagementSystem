@@ -26,17 +26,13 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         public Class? GetById(int id)
         {
             return _db.Classes
-                .Include(c => c.students)
-                .Include(c => c.schedules)
-                .FirstOrDefault(c => EF.Property<int>(c, "Id") == id);
+                .FirstOrDefault(c => c.Id == id);
         }
 
         public void Save(Class classEntity)
         {
             var existingClass = _db.Classes
-                .Include(c => c.students)
-                .Include(c => c.schedules)
-                .FirstOrDefault(c => c.Name == classEntity.Name);
+                .FirstOrDefault(c => c.Id == classEntity.Id);
 
             if (existingClass == null)
             {
@@ -50,7 +46,6 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             }
 
             _db.SaveChanges();
-
         }
     }
 }

@@ -29,23 +29,17 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         {
             return _db.Attendances
                 .Include(a => a.Student)
-                .FirstOrDefault(a => EF.Property<int>(a, "Id") == id);
+                .FirstOrDefault(a => a.Id == id);
         }
         public void Save(Attendance attendance)
         {
-            var entry = _db.Entry(attendance);
-
-            if (entry.State == EntityState.Detached)
+            if (attendance.Id == 0)
             {
-                var id = entry.Property<int>("Id").CurrentValue;
-                if (id == 0)
-                {
-                    _db.Attendances.Add(attendance);
-                }
-                else
-                {
-                    _db.Attendances.Update(attendance);
-                }
+                _db.Attendances.Add(attendance);
+            }
+            else
+            {
+                _db.Attendances.Update(attendance);
             }
 
             _db.SaveChanges();

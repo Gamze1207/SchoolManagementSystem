@@ -111,24 +111,22 @@ namespace SchoolManagementSystem.ConsoleUI
                 return;
             }
 
-            var classes = schoolService.GetAllClasses().ToList();
+            var classes = schoolService.GetAllClasses();
 
-            for (int i = 0; i < classes.Count; i++)
-            {
-                Console.WriteLine($"{i + 1} - {classes[i].Name}");
-            }
+            foreach (var c in classes)
+                Console.WriteLine($"{c.Id} - {c.Name}");
 
-            Console.Write("Choose Class Number: ");
+                Console.Write("Class ID: ");
             string? inputClassId = Console.ReadLine();
-            if (!int.TryParse(inputClassId, out int choiceIndex) || choiceIndex < 1 || choiceIndex > classes.Count)
+            if (!int.TryParse(inputClassId, out int classId))
             {
-                Console.WriteLine("Invalid class selection");
+                Console.WriteLine("Invalid class ID");
                 return;
             }
 
             try
             {
-                var schoolClass = classes[choiceIndex - 1];
+                var schoolClass = classes.First(c => c.Id == classId);
                 schoolService.AddStudent(name, age, schoolClass);
                 Console.WriteLine("Student added!");
             }
@@ -136,6 +134,8 @@ namespace SchoolManagementSystem.ConsoleUI
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+
+            Console.ReadLine();
 
             Console.ReadLine();
         }
@@ -164,7 +164,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             var classes = schoolService.GetAllClasses();
             foreach (var c in classes)
-                //Console.WriteLine($"{c.Id} - {c.Name}");
+                Console.WriteLine($"{c.Id} - {c.Name}");
 
             Console.Write("New class ID: ");
             string? inputClassId = Console.ReadLine();
@@ -176,10 +176,8 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                /*
                 var schoolClass = classes.First(c => c.Id == classId);
                 schoolService.UpdateStudent(id, name, age, schoolClass);
-                */
                 Console.WriteLine("Student updated!");
             }
             catch (Exception ex)
@@ -627,7 +625,8 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine($"{(int)d} - {d}");
 
             Console.Write("Choose day: ");
-            if (!int.TryParse(Console.ReadLine(), out int dayNumber) || !Enum.IsDefined(typeof(SchoolDay), dayNumber))
+            string? inputDayNumber = Console.ReadLine();
+            if (!int.TryParse(inputDayNumber, out int dayNumber))
             {
                 Console.WriteLine("Invalid day number");
                 return;
@@ -635,7 +634,8 @@ namespace SchoolManagementSystem.ConsoleUI
             var day = (SchoolDay)dayNumber;
 
             Console.Write("Period: ");
-            if (!int.TryParse(Console.ReadLine(), out int period))
+            string? inputPeriod = Console.ReadLine();
+            if (!int.TryParse(inputPeriod, out int period))
             {
                 Console.WriteLine("Invalid period");
                 return;
@@ -643,17 +643,9 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                var freeTeachers = schoolService.GetFreeTeachers(day, period).ToList();
-                if (!freeTeachers.Any())
-                {
-                    Console.WriteLine("No free teachers found for this slot.");
-                }
-                else
-                {
-                    Console.WriteLine("\nFree Teachers:");
-                    foreach (var t in freeTeachers)
-                        Console.WriteLine($"- {t.Name}");
-                }
+                var freeTeachers = schoolService.GetFreeTeachers(day, period);
+                foreach (var t in freeTeachers)
+                    Console.WriteLine($"{t.Id} - {t.Name}");
             }
             catch (Exception ex)
             {
@@ -699,7 +691,8 @@ namespace SchoolManagementSystem.ConsoleUI
         {
             //Gamze
             Console.Write("Minimum average: ");
-            if (!double.TryParse(Console.ReadLine(), out double minAvg))
+            string? input = Console.ReadLine();
+            if (!double.TryParse(input, out double minAvg))
             {
                 Console.WriteLine("Invalid number");
                 return;
@@ -708,17 +701,8 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var students = schoolService.GetTopStudents(minAvg);
-                bool hasData = false;
                 foreach (var s in students)
-                {
-                    hasData = true;
-                    double avg = s.grades.Count == 0 ? 0 : s.grades.Average(g => g.Value);
-                    Console.WriteLine($"{s.Name} (Avg: {avg:F2})");
-                }
-                if (!hasData) 
-                {
-                    Console.WriteLine("No students match this criteria.");
-                }
+                    Console.WriteLine($"{s.Id} - {s.Name} (Avg: {s.grades.Average(g => g.Value)})");
             }
             catch (Exception ex)
             {

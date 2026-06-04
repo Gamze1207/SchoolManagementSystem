@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         {
             return _db.Subjects
                 .Include(s => s.Teachers)
-                .FirstOrDefault(s => EF.Property<int>(s, "Id") == id);
+                .FirstOrDefault(s => s.Id == id);
         }
 
         public void Save(Subject subject)

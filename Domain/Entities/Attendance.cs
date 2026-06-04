@@ -9,6 +9,7 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Attendance
     {
+        public int Id { get; private set; }
         public int StudentId { get; private set; }
         public Student Student { get; private set; }
         public DateTime Date { get; private set; }

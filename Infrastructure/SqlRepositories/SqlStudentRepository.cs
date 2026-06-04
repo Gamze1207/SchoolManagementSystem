@@ -35,28 +35,18 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
                 .Include(s => s.Class)
                 .Include(s => s.grades)
                 .Include(s => s.attendances)
-                .FirstOrDefault(s => EF.Property<int>(s, "Id") == id);
+                .FirstOrDefault(s => s.Id == id);
         }
 
         public void Save(Student student)
         {
-            var entry = _db.Entry(student);
-            int currentId = entry.State != EntityState.Detached ? entry.Property<int>("Id").CurrentValue : 0;
-
-            Student? existing = null;
-            if (currentId != 0)
-            {
-                existing = _db.Students.FirstOrDefault(s => EF.Property<int>(s, "Id") == currentId);
-            }
-
-            if (existing == null)
+            if (student.Id == 0)
             {
                 _db.Students.Add(student);
             }
             else
             {
-                _db.Entry(existing).CurrentValues.SetValues(student);
-                _db.Entry(existing).Reference(s => s.Class).CurrentValue = student.Class;
+                _db.Students.Update(student);
             }
 
             _db.SaveChanges();

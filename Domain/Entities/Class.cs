@@ -9,6 +9,7 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Class
     {
+        public int Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public List<Student> students { get; set; } = new List<Student>();
         public List<TeacherSchedule> schedules { get; set; }= new List<TeacherSchedule>();

@@ -31,19 +31,13 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             return _db.Grades
                 .Include(g => g.Student)
                 .Include(g => g.Subject)
-                .FirstOrDefault(g => EF.Property<int>(g, "Id") == id);
+                .FirstOrDefault(g => g.Id == id);
         }
 
         public void Save(Grade grade)
         {
-            var entry = _db.Entry(grade);
-            int currentId = entry.State != EntityState.Detached ? entry.Property<int>("Id").CurrentValue : 0;
-
-            Grade? existingGrade = null;
-            if (currentId != 0)
-            {
-                existingGrade = _db.Grades.FirstOrDefault(g => EF.Property<int>(g, "Id") == currentId);
-            }
+            var existingGrade = _db.Grades
+                .FirstOrDefault(g => g.Id == grade.Id);
 
             if (existingGrade == null)
             {

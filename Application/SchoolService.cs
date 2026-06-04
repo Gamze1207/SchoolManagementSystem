@@ -97,12 +97,10 @@ namespace SchoolManagementSystem.Application
         {
             //Dzheyda
             var student = studentRepository.GetById(studentId);
-            /*
             var index = student.grades.FindIndex(g => g.Id == updatedGrade.Id);
             if (index == -1)
                 throw new KeyNotFoundException("Grade not found");
             student.grades[index] = updatedGrade;
-            */
             studentRepository.Save(student);
         }
 

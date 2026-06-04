@@ -8,6 +8,7 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Grade
     {
+        public int Id { get; private set; }
         public double Value { get; private set; }
         public int StudentId { get; private set; }
         public Student Student { get; private set; }

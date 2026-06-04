@@ -29,19 +29,13 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         {
             return _db.Schedules
                 .Include(s => s.Schedules)
-                .FirstOrDefault(s => EF.Property<int>(s, "Id") == id);
+                .FirstOrDefault(s => s.Id == id);
         }
 
         public void Save(Schedule schedule)
         {
-            var entry = _db.Entry(schedule);
-            int currentId = entry.State != EntityState.Detached ? entry.Property<int>("Id").CurrentValue : 0;
-
-            Schedule? existing = null;
-            if (currentId != 0)
-            {
-                existing = _db.Schedules.FirstOrDefault(s => EF.Property<int>(s, "Id") == currentId);
-            }
+            var existing = _db.Schedules
+                .FirstOrDefault(s => s.Id == schedule.Id);
 
             if (existing == null)
             {
@@ -49,8 +43,9 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             }
             else
             {
-                _db.Entry(existing).CurrentValues.SetValues(schedule);
-                _db.Entry(existing).Reference(s => s.Schedules).CurrentValue = schedule.Schedules;
+                _db.Entry(existing)
+                    .CurrentValues
+                    .SetValues(schedule);
             }
 
             _db.SaveChanges();

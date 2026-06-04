@@ -9,6 +9,7 @@ namespace SchoolManagementSystem.Domain.Entities
 {
     public class Subject
     {
+        public int Id { get; private set; }
         public SubjectType Type { get; private set; }
         public List<Teacher> Teachers { get; set; } = new List<Teacher>();
 
