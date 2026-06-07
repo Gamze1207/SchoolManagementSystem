@@ -9,11 +9,11 @@ namespace SchoolManagementSystem.Domain.Entities
     public class Grade
     {
         public int Id { get; private set; }
-        public double Value { get; private set; }
-        public int StudentId { get; private set; }
+        public double Value { get; set; }
+        public int StudentId { get; set; }
         public Student Student { get; private set; }
-        public int SubjectId { get; private set; }
-        public Subject Subject { get; private set; }
+        public int SubjectId { get;  set; }
+        public Subject Subject { get;  set; }
 
         public Grade() { }
         public Grade(double value, Student student, Subject subject)

@@ -10,10 +10,10 @@ namespace SchoolManagementSystem.Domain.Entities
     public class Student
     {
         public int Id { get; private set; }
-        public string Name { get; private set; } = string.Empty;
-        public int Age { get; private set; }
-        public int ClassId { get; private set; }
-        public Class Class { get; private set; }
+        public string Name { get;  set; } = string.Empty;
+        public int Age { get;  set; }
+        public int ClassId { get;  set; }
+        public Class Class { get; set; }
 
         public List<Grade> grades { get; set; } = new List<Grade>();
         public List<Attendance> attendances { get; set; } = new List<Attendance>();

@@ -51,6 +51,23 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
             _db.SaveChanges();
         }
+
+        public void Update(Student student)
+        {
+            var existing = _db.Students
+                .Include(s => s.grades)
+                .Include(s => s.attendances)
+                .FirstOrDefault(s => s.Id == student.Id);
+
+            if (existing != null) 
+                throw new KeyNotFoundException("Student not found");
+
+            existing.Name = student.Name;
+            existing.Age = student.Age;
+            existing.ClassId = student.ClassId;
+
+            _db.SaveChanges();
+        }
     }
 }
 

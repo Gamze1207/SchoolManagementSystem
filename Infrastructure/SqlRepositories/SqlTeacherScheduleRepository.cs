@@ -54,5 +54,24 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
 
             _db.SaveChanges();
         }
+
+        public void Update(TeacherSchedule schedule)
+        {
+            var existing = _db.TeacherSchedules
+                .FirstOrDefault(t => t.Id == schedule.Id);
+
+            if (existing == null)
+                throw new KeyNotFoundException("TeacherSchedule not found.");
+
+            existing.TeacherId = schedule.TeacherId;
+            existing.ClassId = schedule.ClassId;
+            existing.Subject = schedule.Subject;
+            existing.Hours = schedule.Hours;
+            existing.Year = schedule.Year;
+            _db.SaveChanges();
+
+
+
+        }
     }
 }

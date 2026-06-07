@@ -13,6 +13,6 @@ namespace SchoolManagementSystem.Application.Interfaces
         IReadOnlyList<Student> GetAll();
         Student GetById(int id);
         void Save(Student student);
-
+        void Update(Student student);
     }
 }

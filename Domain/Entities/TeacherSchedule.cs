@@ -10,14 +10,14 @@ namespace SchoolManagementSystem.Domain.Entities
     public class TeacherSchedule
     {
         public int Id {  get; private set; }
-        public int TeacherId { get; private set; }
+        public int TeacherId { get;  set; }
         public Teacher Teacher { get; private set; }
-        public int ClassId { get; private set; }
+        public int ClassId { get;  set; }
         public Class Class { get; private set; }
         public Schedule Schedules { get; private set; }
-        public SubjectType Subject { get; private set; }
-        public int Hours { get; private set; }
-        public int Year { get; private set; }
+        public SubjectType Subject { get;  set; }
+        public int Hours { get;  set; }
+        public int Year { get;  set; }
 
         public TeacherSchedule() { }
         public TeacherSchedule(Teacher teacher, Class _class, SubjectType subject, int hours, int year)

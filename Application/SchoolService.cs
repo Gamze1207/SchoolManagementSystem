@@ -78,11 +78,20 @@ namespace SchoolManagementSystem.Application
             subjectRepository.Save(subject);
         }
 
-        public void AddGrade(int studentId, int value, Subject subject)
+        public void AddGrade(int studentId, int value, SubjectType type)
         {
             //Dzheyda
             var student = studentRepository.GetById(studentId);
-            var grade = new Grade(value, student, subject);
+            if(student == null)
+            {
+                throw new KeyNotFoundException("Student not found");
+            }
+            var subjecct = subjectRepository.GetAll().FirstOrDefault(s => s.Type == type);
+
+            if (subjecct == null) throw new KeyNotFoundException("Subject not found");
+
+            var grade = new Grade(value, student, subjecct);
+
             student.AddGrade(grade);
             studentRepository.Save(student);
         }
@@ -93,15 +102,31 @@ namespace SchoolManagementSystem.Application
             return studentRepository.GetById(id);
         }
 
-        public void UpdateGrade(int studentId, Grade updatedGrade)
+        public void UpdateGrade(int studentId, int gradeId, int newValue, SubjectType type)
         {
             //Dzheyda
             var student = studentRepository.GetById(studentId);
-            var index = student.grades.FindIndex(g => g.Id == updatedGrade.Id);
-            if (index == -1)
+            if(student == null)
+            {
+                throw new KeyNotFoundException("Student not found");
+            }
+            var grade = gradeRepository.GetById(gradeId);
+            if(grade == null) 
                 throw new KeyNotFoundException("Grade not found");
-            student.grades[index] = updatedGrade;
-            studentRepository.Save(student);
+
+            var subject = subjectRepository
+                .GetAll()
+                .FirstOrDefault(s => s.Type == type);
+
+            if(subject == null)
+                throw new KeyNotFoundException("Subject not found");
+
+            grade.Value = newValue;
+            grade.SubjectId = subject.Id;
+            grade.Subject  = subject;
+
+            gradeRepository.Update(grade);
+
         }
 
         public double CalculateAverageGrade(int studentId)
@@ -145,11 +170,17 @@ namespace SchoolManagementSystem.Application
         {
             //Dzheyda
             var student = studentRepository.GetById(studentId);
+            if ( student == null ) {
+                throw new KeyNotFoundException("Student not found");
+            }
             var schoolClass = classRepository.GetById(classId);
+            if (schoolClass == null) {
+                throw new KeyNotFoundException("Class not found");
+            } 
+             student.ClassId = schoolClass.Id;
+             student.Class = schoolClass;
 
-            schoolClass.AddStudent(student);
-            classRepository.Save(schoolClass);
-            studentRepository.Save(student);
+            studentRepository.Update(student);
         }
 
         public IReadOnlyList<Class> GetAllClasses()
@@ -237,15 +268,14 @@ namespace SchoolManagementSystem.Application
             //Dzheyda
             var schedule = teacherScheduleRepository.GetById(scheduleId);
 
-            var updated = new TeacherSchedule(
-                schedule.Teacher,
-                schedule.Class,
-                schedule.Subject,
-                schedule.Hours,
-                year
-            );
+           if (schedule == null)
+            {
+                throw new KeyNotFoundException("Schedule not found");
+            }
 
-            teacherScheduleRepository.Save(updated);
+           schedule.Year = year;
+
+            teacherScheduleRepository.Save(schedule);
         }
 
         public IEnumerable<Student> GetTopStudents(double minAverage)

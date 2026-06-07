@@ -14,5 +14,7 @@ namespace SchoolManagementSystem.Application.Interfaces
 
         void Save(Grade grade);
 
+        void Update(Grade grade);
+
     }
 }

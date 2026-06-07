@@ -14,6 +14,6 @@ namespace SchoolManagementSystem.Application.Interfaces
         TeacherSchedule GetById(int id);
 
         void Save(TeacherSchedule schedule);
-
+        void Update(TeacherSchedule schedule);
     }
 }
