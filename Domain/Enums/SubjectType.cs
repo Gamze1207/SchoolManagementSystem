@@ -8,7 +8,7 @@ namespace SchoolManagementSystem.Domain.Enums
 {
     public enum SubjectType
     {
-        Math,
+        Math=1,
         English,
         German,
         Russian,

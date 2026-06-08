@@ -273,7 +273,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                schoolService.AddGrade(studentId, value, new Subject(type));
+                schoolService.AddGrade(studentId, value, type);
                 Console.WriteLine("Grade added!");
             }
             catch (Exception ex)
@@ -319,7 +319,7 @@ namespace SchoolManagementSystem.ConsoleUI
                 var student = schoolService.GetStudentById(studentId);
                 var subject = new Subject(type);
                 var grade = new Grade(value, student, subject);
-                schoolService.UpdateGrade(studentId, grade);
+                schoolService.UpdateGrade(studentId, gradeId,value,type);
                 Console.WriteLine("Grade updated!");
             }
             catch (Exception ex)
@@ -600,7 +600,7 @@ namespace SchoolManagementSystem.ConsoleUI
                 foreach (var s in schedules)
                 {
                     Console.WriteLine(
-                        //$"{s.Id} | " +
+                        $"{s.Id} | " +
                         $"{s.Slot.Day} Period {s.Slot.Period} | " +
                         $"Teacher: {s.Schedules.Teacher.Name} | " +
                         $"Class: {s.Schedules.Class.Name} | " +
