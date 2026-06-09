@@ -1,6 +1,7 @@
 ﻿using SchoolManagementSystem.Application.Interfaces;
 using SchoolManagementSystem.Domain.Entities;
 using SchoolManagementSystem.Domain.Enums;
+using SchoolManagementSystem.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,22 +45,16 @@ namespace SchoolManagementSystem.Application
         public void UpdateStudent(int id, string name, int age, Class schoolClass)
         {
             //Gamze
-            var existing = studentRepository.GetById(id);
-            if (existing == null) 
-            { 
-                throw new KeyNotFoundException("Student not found"); 
-            }
-
-            var updated = new Student(name, age, schoolClass);
-            foreach (var item in existing.grades)
+            var student = studentRepository.GetById(id);
+            if (student == null)
             {
-                updated.AddGrade(item);
+                throw new KeyNotFoundException("Student not found");
             }
-            foreach (var item in existing.attendances)
-            {
-                updated.AddAttendance(item);
-            }
-            studentRepository.Save(updated);
+            student.Name = name;
+            student.Age = age;
+            student.Class = schoolClass;
+            student.ClassId = schoolClass.Id;
+            studentRepository.Update(student);
         }
 
         public void AddTeacher(string name, List<SubjectType> subjects)
@@ -81,16 +76,23 @@ namespace SchoolManagementSystem.Application
         public void AddGrade(int studentId, int value, SubjectType type)
         {
             //Dzheyda
+            if (value < 2 || value > 6)
+                throw new ArgumentOutOfRangeException(nameof(value), "Grade must be between 2 and 6.");
+
             var student = studentRepository.GetById(studentId);
-            if(student == null)
+            if (student == null)
             {
                 throw new KeyNotFoundException("Student not found");
             }
-            var subjecct = subjectRepository.GetAll().FirstOrDefault(s => s.Type == type);
 
-            if (subjecct == null) throw new KeyNotFoundException("Subject not found");
+            var subject = subjectRepository.GetAll()
+                .FirstOrDefault(s => s.Type == type);
+            if (subject == null)
+            {
+                throw new KeyNotFoundException("Subject not found");
+            }
 
-            var grade = new Grade(value, student, subjecct);
+            var grade = new Grade(value, student, subject);
 
             student.AddGrade(grade);
             studentRepository.Save(student);
@@ -110,16 +112,24 @@ namespace SchoolManagementSystem.Application
             {
                 throw new KeyNotFoundException("Student not found");
             }
+
             var grade = gradeRepository.GetById(gradeId);
-            if(grade == null) 
+            if (grade == null)
+            {
                 throw new KeyNotFoundException("Grade not found");
+            }
+            if (newValue < 2 || newValue > 6)
+            {
+                throw new ArgumentOutOfRangeException(nameof(newValue), "Grade must be between 2 and 6.");
+            }
 
             var subject = subjectRepository
                 .GetAll()
                 .FirstOrDefault(s => s.Type == type);
-
-            if(subject == null)
+            if (subject == null)
+            {
                 throw new KeyNotFoundException("Subject not found");
+            }
 
             grade.Value = newValue;
             grade.SubjectId = subject.Id;
@@ -176,10 +186,9 @@ namespace SchoolManagementSystem.Application
             var schoolClass = classRepository.GetById(classId);
             if (schoolClass == null) {
                 throw new KeyNotFoundException("Class not found");
-            } 
-             student.ClassId = schoolClass.Id;
-             student.Class = schoolClass;
-
+            }
+            student.ClassId = schoolClass.Id;
+            student.Class = schoolClass;
             studentRepository.Update(student);
         }
 
@@ -187,6 +196,17 @@ namespace SchoolManagementSystem.Application
         {
             //Gamze
             return classRepository.GetAll();
+        }
+
+        public void UpdateClass(int classId, string newName)
+        {
+            //Gamze
+            var schoolClass = classRepository.GetById(classId);
+            if (schoolClass == null)
+                throw new KeyNotFoundException("Class not found");
+
+            schoolClass.Name = newName;
+            classRepository.Save(schoolClass);
         }
 
         public IReadOnlyList<Attendance> GetAbsences(int studentId)
@@ -244,6 +264,76 @@ namespace SchoolManagementSystem.Application
                 teacher.subjects.AsReadOnly(),
                 teacher.schedules.AsReadOnly()
                 );
+        }
+
+        public void AddScheduleEntry(int classId, int teacherId, SubjectType subjectType, SchoolDay day, int period)
+        {
+            //Gamze
+            var teacher = teacherRepository.GetById(teacherId);
+            if (teacher == null)
+            {
+                throw new KeyNotFoundException("Teacher not found");
+            }
+
+            var schoolClass = classRepository.GetById(classId);
+            if (schoolClass == null)
+            {
+                throw new KeyNotFoundException("Class not found");
+            }
+
+            var subject = subjectRepository.GetAll()
+                .FirstOrDefault(s => s.Type == subjectType);
+            if (subject == null)
+            {
+                throw new KeyNotFoundException("Subject not found");
+            }
+
+            bool teacherCanTeach = subject.Teachers.Any(t => t.Id == teacherId);
+            if (!teacherCanTeach)
+            {
+                throw new InvalidOperationException("Teacher cannot teach this subject");
+            }
+
+            var allSchedules = scheduleRepository.GetAll();
+
+            bool classConflict = allSchedules.Any(s =>
+                s.Schedules.ClassId == classId &&
+                s.Slot.Day == day &&
+                s.Slot.Period == period);
+            if (classConflict)
+            {
+                throw new InvalidOperationException("Class already has a subject at this time");
+            }
+
+            bool teacherConflict = allSchedules.Any(s =>
+                s.Schedules.TeacherId == teacherId &&
+                s.Slot.Day == day &&
+                s.Slot.Period == period);
+            if (teacherConflict)
+            {
+                throw new InvalidOperationException("Teacher already has a class at this time");
+            }
+
+            int weeklyHours = allSchedules.Count(s =>
+                s.Schedules.TeacherId == teacherId);
+            if (weeklyHours >= 18)
+            {
+                throw new InvalidOperationException("Teacher has reached weekly hour limit");
+            }
+
+            var teacherSchedule = new TeacherSchedule(
+                teacher,
+                schoolClass,
+                subjectType,
+                18,
+                DateTime.Now.Year
+            );
+
+            var slot = new ScheduleSlot(day, period);
+
+            var schedule = new Schedule(teacherSchedule, slot);
+
+            scheduleRepository.Save(schedule);
         }
 
         public IReadOnlyList<Schedule> GetSchedule()

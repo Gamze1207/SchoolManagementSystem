@@ -127,6 +127,10 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var schoolClass = classes.First(c => c.Id == classId);
+                if (schoolClass == null)
+                {
+                    Console.WriteLine("Class not found");
+                }
                 schoolService.AddStudent(name, age, schoolClass);
                 Console.WriteLine("Student added!");
             }
@@ -175,6 +179,10 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var schoolClass = classes.First(c => c.Id == classId);
+                if (schoolClass == null)
+                {
+                    Console.WriteLine("Class not found");
+                }
                 schoolService.UpdateStudent(id, name, age, schoolClass);
                 Console.WriteLine("Student updated!");
             }
@@ -201,7 +209,16 @@ namespace SchoolManagementSystem.ConsoleUI
                 if (string.IsNullOrWhiteSpace(input)) break;
 
                 if (Enum.TryParse(input, out SubjectType subject))
-                    subjects.Add(subject);
+                {
+                    if (Enum.IsDefined(typeof(SubjectType), subject))
+                    {
+                        subjects.Add(subject);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid subject type");
+                    }
+                }
             }
 
             try
@@ -316,9 +333,6 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                var student = schoolService.GetStudentById(studentId);
-                var subject = new Subject(type);
-                var grade = new Grade(value, student, subject);
                 schoolService.UpdateGrade(studentId, gradeId,value,type);
                 Console.WriteLine("Grade updated!");
             }
@@ -498,6 +512,10 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
+                if (!Enum.IsDefined(typeof(AttendanceType), typeNumber))
+                {
+                    Console.WriteLine("Invalid attendance type");
+                }
                 var status = (AttendanceType)typeNumber;
                 schoolService.AddAttendance(id, date, status);
                 Console.WriteLine("Attendance added!");
@@ -593,27 +611,111 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetSchedule()
         {
             //Gamze
-            try
-            {
-                var schedules = schoolService.GetSchedule();
+            bool running = true;
 
-                foreach (var s in schedules)
+            while (running)
+            {
+                Console.Clear();
+                Console.WriteLine("=== Schedule ===");
+
+                try
                 {
-                    Console.WriteLine(
-                        $"{s.Id} | " +
-                        $"{s.Slot.Day} Period {s.Slot.Period} | " +
-                        $"Teacher: {s.Schedules.Teacher.Name} | " +
-                        $"Class: {s.Schedules.Class.Name} | " +
-                        $"Subject: {s.Schedules.Subject}"
-                    );
+                    var schedules = schoolService.GetSchedule();
+
+                    foreach (var s in schedules)
+                    {
+                        Console.WriteLine(
+                            $"{s.Id} | " +
+                            $"{s.Slot.Day} Period {s.Slot.Period} | " +
+                            $"Teacher: {s.Schedules.Teacher.Name} | " +
+                            $"Class: {s.Schedules.Class.Name} | " +
+                            $"Subject: {s.Schedules.Subject}"
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("1) Add schedule entry");
+                Console.WriteLine("x) Back");
+                Console.Write("Choose: ");
+
+                string? choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    Console.Write("Class ID: ");
+                    string? inputClass = Console.ReadLine();
+                    if (!int.TryParse(inputClass, out int classId))
+                    {
+                        Console.WriteLine("Invalid class ID");
+                        Console.ReadLine();
+                        continue;
+                    }
+
+                    Console.Write("Teacher ID: ");
+                    string? inputTeacher = Console.ReadLine();
+                    if (!int.TryParse(inputTeacher, out int teacherId))
+                    {
+                        Console.WriteLine("Invalid teacher ID");
+                        Console.ReadLine();
+                        continue;
+                    }
+
+                    Console.Write("Subject type: ");
+                    string? inputSubject = Console.ReadLine();
+                    if (!Enum.TryParse(inputSubject, out SubjectType subjectType))
+                    {
+                        Console.WriteLine("Invalid subject type");
+                        Console.ReadLine();
+                        continue;
+                    }
+
+                    Console.WriteLine("Day:");
+                    foreach (var d in Enum.GetValues(typeof(SchoolDay)))
+                    {
+                        Console.WriteLine($"{(int)d} - {d}");
+                    }
+
+                    Console.Write("Choose day: ");
+                    string? inputDay = Console.ReadLine();
+                    if (!int.TryParse(inputDay, out int dayNumber))
+                    {
+                        Console.WriteLine("Invalid day");
+                        Console.ReadLine();
+                        continue;
+                    }
+                    var day = (SchoolDay)dayNumber;
+
+                    Console.Write("Period: ");
+                    string? inputPeriod = Console.ReadLine();
+                    if (!int.TryParse(inputPeriod, out int period))
+                    {
+                        Console.WriteLine("Invalid period");
+                        Console.ReadLine();
+                        continue;
+                    }
+
+                    try
+                    {
+                        schoolService.AddScheduleEntry(classId, teacherId, subjectType, day, period);
+                        Console.WriteLine("Schedule entry added!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+
+                    Console.ReadLine();
+                }
+                else if (choice == "x")
+                {
+                    running = false;
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-
-            Console.ReadLine();
         }
 
         private void CheckForFreeTeachers()
@@ -700,8 +802,11 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var students = schoolService.GetTopStudents(minAvg);
-                foreach (var s in students)
-                    Console.WriteLine($"{s.Id} - {s.Name} (Avg: {s.grades.Average(g => g.Value)})");
+                foreach (var s in students) 
+                {
+                    var avg = s.grades.Average(g => g.Value);
+                    Console.WriteLine($"{s.Id} - {s.Name} (Avg: {avg})");
+                }
             }
             catch (Exception ex)
             {
