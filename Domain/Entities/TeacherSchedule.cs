@@ -34,7 +34,9 @@ namespace SchoolManagementSystem.Domain.Entities
                 throw new ArgumentException("Year must be between 2000 and next year");
 
             Teacher = teacher;
+            TeacherId = teacher.Id;
             Class = _class;
+            ClassId = _class.Id;
             Subject = subject;
             Hours = hours;
             Year = year;

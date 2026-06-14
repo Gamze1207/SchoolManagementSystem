@@ -8,7 +8,7 @@ namespace SchoolManagementSystem.Domain.Enums
 {
     public enum AttendanceType
     {
-        Present,
+        Present=1,
         Absent,
         Late,
         Excused

@@ -36,7 +36,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         {
             var existing = _db.Subjects
                 .Include(s => s.Teachers)
-                .FirstOrDefault(s => s.Type == subject.Type);
+                .FirstOrDefault(s => s.Id == subject.Id);
 
             if (existing == null)
             {

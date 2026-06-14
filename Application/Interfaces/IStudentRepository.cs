@@ -9,7 +9,6 @@ namespace SchoolManagementSystem.Application.Interfaces
 {
     public interface IStudentRepository
     {
-
         IReadOnlyList<Student> GetAll();
         Student GetById(int id);
         void Save(Student student);

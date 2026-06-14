@@ -47,6 +47,9 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
                 _db.Entry(existing)
                     .CurrentValues
                     .SetValues(teacher);
+
+                existing.schedules = teacher.schedules;
+                existing.subjects = teacher.subjects;
             }
 
             _db.SaveChanges();

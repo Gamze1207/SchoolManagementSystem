@@ -18,10 +18,5 @@ namespace SchoolManagementSystem.Domain.ValueObjects
             Day = day;
             Period = period;
         }
-
-        public override string ToString()
-        {
-            return $"{Day} - Period {Period}";
-        }
     }
 }

@@ -100,6 +100,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddStudent()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Add Student =====");
+
             Console.Write("Student name: ");
             string name = Console.ReadLine() ?? "";
 
@@ -126,7 +129,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                var schoolClass = classes.First(c => c.Id == classId);
+                var schoolClass = classes.FirstOrDefault(c => c.Id == classId);
                 if (schoolClass == null)
                 {
                     Console.WriteLine("Class not found");
@@ -145,6 +148,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void UpdateStudent()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Update Student =====");
+
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -178,7 +184,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             try
             {
-                var schoolClass = classes.First(c => c.Id == classId);
+                var schoolClass = classes.FirstOrDefault(c => c.Id == classId);
                 if (schoolClass == null)
                 {
                     Console.WriteLine("Class not found");
@@ -197,14 +203,17 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddTeacher()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Add Teacher =====");
+
             Console.Write("Name: ");
             string name = Console.ReadLine() ?? "";
 
             var subjects = new List<SubjectType>();
 
-            var subjectList = schoolService.GetAllSubjects();
-            Console.WriteLine("Available Subject:");
-            foreach(var sub in subjects)
+            var availableSubjects = schoolService.GetAllSubjects();
+            Console.WriteLine("Available Subjects:");
+            foreach(var sub in availableSubjects)
             {
                 Console.WriteLine($"{sub.Id} - {sub.Type}");
             }
@@ -244,6 +253,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddSubject()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Add Subject =====");
+
             Console.WriteLine("Choose subject type:");
             foreach (var type in Enum.GetValues(typeof(SubjectType)))
                 Console.WriteLine($"{(int)type} - {type}");
@@ -276,12 +288,16 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddGrade()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Add Grade =====");
+
             var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
             foreach(var s in students)
             {
                 Console.WriteLine($"{s.Id} - {s.Name}");
             }
+
             Console.Write("Student Id: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int studentId))
@@ -298,8 +314,21 @@ namespace SchoolManagementSystem.ConsoleUI
                 return;
             }
 
+            var subjects = schoolService.GetAllSubjects();
+            Console.WriteLine("Available Subjects:");
+            foreach(var sub in subjects)
+            {
+                Console.WriteLine($"{sub.Id} - {sub.Type}");
+            }
+
             Console.Write("Subject type: ");
-            Enum.TryParse(Console.ReadLine(), out SubjectType type);
+            string? inputType = Console.ReadLine();
+            if (!Enum.TryParse(inputType, out SubjectType type) ||
+                !Enum.IsDefined(typeof(SubjectType), type))
+            {
+                Console.WriteLine("Invalid subject type");
+                return;
+            }
 
             try
             {
@@ -317,6 +346,8 @@ namespace SchoolManagementSystem.ConsoleUI
         private void UpdateGrade()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Update Grade =====");
 
             var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
@@ -324,6 +355,7 @@ namespace SchoolManagementSystem.ConsoleUI
             {
                 Console.WriteLine($"{s.Id} - {s.Name}");
             }
+
             Console.Write("Student Id: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int studentId))
@@ -353,7 +385,6 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine($"{g.Id} | {g.Subject.Type} | {g.Value}");
             }
 
-
             Console.Write("Grade Id: ");
             string? inputGradeId = Console.ReadLine();
             if (!int.TryParse(inputGradeId, out int gradeId))
@@ -361,7 +392,6 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine("Invalid grade ID");
                 return;
             }
-
 
             Console.Write("New value: ");
             string? inputValue = Console.ReadLine();
@@ -379,7 +409,13 @@ namespace SchoolManagementSystem.ConsoleUI
             }
 
             Console.Write("Subject type: ");
-            Enum.TryParse(Console.ReadLine(), out SubjectType type);
+            string? inputType = Console.ReadLine();
+            if (!Enum.TryParse(inputType, out SubjectType type) ||
+                !Enum.IsDefined(typeof(SubjectType), type))
+            {
+                Console.WriteLine("Invalid subject type");
+                return;
+            }
 
             try
             {
@@ -397,12 +433,16 @@ namespace SchoolManagementSystem.ConsoleUI
         private void CalculateAverageGrade()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Calculate Average Grade =====");
+
             var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
             foreach(var s in students)
             {
                 Console.WriteLine($"{s.Id} - {s.Name}");
             }
+
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -427,12 +467,16 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GenerateReportCard()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Generate Report Card =====");
+
             var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
             foreach(var s in students)
             {
-                Console.WriteLine("Available Students:");
+                Console.WriteLine($"{s.Id} - {s.Name}");
             }
+
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -467,6 +511,16 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddClass()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Add Class =====");
+
+            var classes = schoolService.GetAllClasses();
+            Console.WriteLine("Available Classes:");
+            foreach (var c in classes)
+            {
+                Console.WriteLine($"{c.Id} - {c.Name}");
+            }
+
             Console.Write("Class name: ");
             string name = Console.ReadLine() ?? "";
 
@@ -486,12 +540,16 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddStudentToClass()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Add Student to Class =====");
+
             var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
             foreach(var s in students)
             {
                 Console.WriteLine($"{s.Id} - {s.Name}");
             }
+
             Console.Write("Student Id: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int studentId))
@@ -531,6 +589,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetAbsences()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Get Absences =====");
+
             var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
             foreach(var s in students)
@@ -564,12 +625,16 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddAttendance()
         {
             //Gamze
-            var students = schoolService.GettAllStudents();
+            Console.Clear();
+            Console.WriteLine("===== Add Attendance =====");
+
+            var students = schoolService.GetAllStudents();
             Console.WriteLine("Available Students:");
             foreach(var s in students)
             {
                 Console.WriteLine($"{s.Id} - {s.Name}");
             }
+
             Console.Write("Student ID: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int id))
@@ -619,6 +684,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetGradesBySubject()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Get Grades By Subject =====");
+
             var subjects = schoolService.GetAllSubjects();
             Console.WriteLine("Available Subjects:");
             foreach(var sub in subjects)
@@ -627,7 +695,13 @@ namespace SchoolManagementSystem.ConsoleUI
             }
 
             Console.Write("Subject type: ");
-            Enum.TryParse(Console.ReadLine(), out SubjectType subject);
+            string? inputType = Console.ReadLine();
+            if (!Enum.TryParse(inputType, out SubjectType subject) ||
+                !Enum.IsDefined(typeof(SubjectType), subject))
+            {
+                Console.WriteLine("Invalid subject type");
+                return;
+            }
 
             try
             {
@@ -647,11 +721,14 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetGradesByClass()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Get Grades By Class =====");
+
             var classes = schoolService.GetAllClasses();
             Console.WriteLine("Available Classes:");
             foreach(var c in classes)
             {
-                Console.WriteLine($"{c.IId} - {c.Name}");
+                Console.WriteLine($"{c.Id} - {c.Name}");
             }
 
             Console.Write("Class Id: ");
@@ -680,6 +757,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetTeacherInfo()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Get Teacher Info =====");
+
             var teachers = schoolService.GetAllTeachers();
             Console.WriteLine("Available Teachers:");
             foreach(var t in teachers)
@@ -699,6 +779,12 @@ namespace SchoolManagementSystem.ConsoleUI
             try
             {
                 var info = schoolService.GetTeacherInfo(teacherId);
+                if (info.Teacher == null)
+                {
+                    Console.WriteLine("Teacher not found");
+                    Console.ReadLine();
+                    return;
+                }
 
                 Console.WriteLine($"Name: {info.Teacher.Name}");
 
@@ -760,7 +846,7 @@ namespace SchoolManagementSystem.ConsoleUI
                     Console.Clear();
                     Console.WriteLine("=== Add Schedule Entry ===");
 
-                    var casses = schoolService.GetAllClasses();
+                    var classes = schoolService.GetAllClasses();
                     Console.WriteLine("Available Classes:");
                     foreach(var c in classes)
                     {
@@ -801,7 +887,8 @@ namespace SchoolManagementSystem.ConsoleUI
 
                     Console.Write("Subject type: ");
                     string? inputSubject = Console.ReadLine();
-                    if (!Enum.TryParse(inputSubject, out SubjectType subjectType))
+                    if (!Enum.TryParse(inputSubject, out SubjectType subjectType) ||
+                        !Enum.IsDefined(typeof(SubjectType), subjectType))
                     {
                         Console.WriteLine("Invalid subject type");
                         Console.ReadLine();
@@ -855,6 +942,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void CheckForFreeTeachers()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Check For Free Teachers =====");
+
             Console.WriteLine("Day:");
             foreach (var d in Enum.GetValues(typeof(SchoolDay)))
                 Console.WriteLine($"{(int)d} - {d}");
@@ -893,12 +983,14 @@ namespace SchoolManagementSystem.ConsoleUI
         private void SetScheduleYear()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Set Schedule Year =====");
+
             var schedules = schoolService.GetSchedule();
             Console.WriteLine("Available Schedules:");
-
             foreach (var s in schedules)
             {
-                Console.WriteLine($"Schedule ID: {s.Id} | Teacher Schedule ID:{s.TeacherScheduleId} | Slot: {s.Slot}");
+                Console.WriteLine($"Schedule ID: {s.Id} | Teacher Schedule ID:{s.TeacherScheduleId} | Slot: {s.Slot.Day} Period {s.Slot.Period}");
             }
 
             Console.Write("Schedule Id: ");
@@ -933,6 +1025,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetTopStudents()
         {
             //Gamze
+            Console.Clear();
+            Console.WriteLine("===== Get Top Students =====");
+
             Console.Write("Minimum average: ");
             string? input = Console.ReadLine();
             if (!double.TryParse(input, out double minAvg))
@@ -961,6 +1056,9 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetProblemStudents()
         {
             //Dzheyda
+            Console.Clear();
+            Console.WriteLine("===== Get Problem Students =====");
+
             Console.Write("Maximum average: ");
             string? input = Console.ReadLine();
             if (!double.TryParse(input, out double max))

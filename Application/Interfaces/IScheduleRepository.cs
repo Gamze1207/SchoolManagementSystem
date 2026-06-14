@@ -9,11 +9,8 @@ namespace SchoolManagementSystem.Application.Interfaces
 {
     public interface IScheduleRepository
     {
-
         IReadOnlyList<Schedule> GetAll();
         Schedule GetById(int id);
-
         void Save(Schedule schedule);
-
     }
 }

@@ -69,9 +69,6 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
             existing.Hours = schedule.Hours;
             existing.Year = schedule.Year;
             _db.SaveChanges();
-
-
-
         }
     }
 }

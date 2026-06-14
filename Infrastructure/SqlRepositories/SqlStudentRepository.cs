@@ -59,7 +59,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
                 .Include(s => s.attendances)
                 .FirstOrDefault(s => s.Id == student.Id);
 
-            if (existing != null) 
+            if (existing == null) 
                 throw new KeyNotFoundException("Student not found");
 
             existing.Name = student.Name;

@@ -11,7 +11,6 @@ namespace SchoolManagementSystem.Application.Interfaces
     {
         IReadOnlyList<Subject> GetAll();
         Subject GetById(int id);
-
         void Save(Subject subject);
     }
 }

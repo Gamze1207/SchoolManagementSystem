@@ -31,13 +31,5 @@ namespace SchoolManagementSystem.Domain.Entities
 
             subjects.Add(subject);
         }
-
-        public void AddSchedule(TeacherSchedule schedule)
-        {
-            if (schedule == null)
-                throw new ArgumentNullException("Schedule must be not be null");
-
-            schedules.Add(schedule);
-        }
     }
 }

@@ -23,21 +23,5 @@ namespace SchoolManagementSystem.Domain.Entities
             students = new List<Student>();
             schedules = new List<TeacherSchedule>();
         }
-
-        public void AddStudent(Student student)
-        {
-            if (student == null)
-                throw new ArgumentNullException("Student must be not be null");
-
-            students.Add(student);
-        }
-
-        public void AddSchedule(TeacherSchedule schedule)
-        {
-            if (schedule == null)
-                throw new ArgumentNullException("Schedule must be not be null");
-
-            schedules.Add(schedule);
-        }
     }
 }

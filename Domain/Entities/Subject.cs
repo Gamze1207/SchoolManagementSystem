@@ -21,13 +21,5 @@ namespace SchoolManagementSystem.Domain.Entities
             Type = type;
             Teachers = new List<Teacher>();
         }
-
-        public void AddTeacher(Teacher teacher)
-        {
-            if (teacher == null)
-                throw new ArgumentNullException("Teacher must be not be null");
-
-            Teachers.Add(teacher);
-        }
     }
 }

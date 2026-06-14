@@ -11,10 +11,7 @@ namespace SchoolManagementSystem.Application.Interfaces
     {
         IReadOnlyList<Grade> GetAll();
         Grade GetById(int id);
-
         void Save(Grade grade);
-
         void Update(Grade grade);
-
     }
 }

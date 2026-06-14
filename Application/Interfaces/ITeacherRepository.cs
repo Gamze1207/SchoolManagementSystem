@@ -9,10 +9,8 @@ namespace SchoolManagementSystem.Application.Interfaces
 {
     public interface ITeacherRepository
     {
-
         IReadOnlyList<Teacher> GetAll();
         Teacher GetById(int id);
         void Save(Teacher teacher);
-
     }
 }

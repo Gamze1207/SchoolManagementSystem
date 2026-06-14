@@ -9,11 +9,8 @@ namespace SchoolManagementSystem.Application.Interfaces
 {
     public interface IAttendanceRepository
     {
-
         IReadOnlyList<Attendance> GetAll();
         Attendance GetById(int id);
-
         void Save(Attendance attendance);
-
     }
 }

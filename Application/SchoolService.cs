@@ -57,6 +57,12 @@ namespace SchoolManagementSystem.Application
             studentRepository.Update(student);
         }
 
+        public IReadOnlyList<Student> GetAllStudents()
+        {
+            //Gamze
+            return studentRepository.GetAll();
+        }
+
         public void AddTeacher(string name, List<SubjectType> subjects)
         {
             //Dzheyda
@@ -67,8 +73,9 @@ namespace SchoolManagementSystem.Application
             teacherRepository.Save(teacher);
         }
 
-        public IReadOnlyList<Teacher> GetTeachers()
+        public IReadOnlyList<Teacher> GetAllTeachers()
         {
+            //Dzheyda
             return teacherRepository.GetAll();
         }
 
@@ -80,6 +87,7 @@ namespace SchoolManagementSystem.Application
 
         public IReadOnlyList<Subject> GetAllSubjects()
         {
+            //Gamze
             return subjectRepository.GetAll();
         }
 
@@ -105,7 +113,7 @@ namespace SchoolManagementSystem.Application
             var grade = new Grade(value, student, subject);
 
             student.AddGrade(grade);
-            studentRepository.Save(student);
+            gradeRepository.Save(grade);
         }
 
         public Student GetStudentById(int id)
@@ -132,8 +140,12 @@ namespace SchoolManagementSystem.Application
             {
                 throw new ArgumentOutOfRangeException(nameof(newValue), "Grade must be between 2 and 6.");
             }
+            if (grade.StudentId != studentId)
+            {
+                throw new InvalidOperationException("Grade does not belong to the specified student");
+            }
 
-            var subject = subjectRepository
+                var subject = subjectRepository
                 .GetAll()
                 .FirstOrDefault(s => s.Type == type);
             if (subject == null)
@@ -242,7 +254,6 @@ namespace SchoolManagementSystem.Application
             var attendance = new Attendance(student, date, status);
             attendanceRepository.Save(attendance);
             student.AddAttendance(attendance);
-            studentRepository.Save(student);
         }
 
         public IEnumerable<Grade> GetGradesBySubject(SubjectType subject)
@@ -268,6 +279,10 @@ namespace SchoolManagementSystem.Application
         {
             //Dzheyda
             var teacher = teacherRepository.GetById(teacherId);
+            if (teacher == null)
+            {
+                throw new NullReferenceException("Teacher not found");
+            }
 
             return (
                 teacher,
@@ -331,16 +346,27 @@ namespace SchoolManagementSystem.Application
                 throw new InvalidOperationException("Teacher has reached weekly hour limit");
             }
 
-            var teacherSchedule = new TeacherSchedule(
-                teacher,
-                schoolClass,
-                subjectType,
-                18,
-                DateTime.Now.Year
-            );
+            var teacherSchedule = teacherScheduleRepository.GetAll()
+                .FirstOrDefault(ts =>
+                ts.TeacherId == teacherId &&
+                ts.ClassId == classId &&
+                ts.Subject == subjectType &&
+                ts.Year == DateTime.Now.Year);
+
+            if (teacherSchedule == null)
+            {
+                teacherSchedule = new TeacherSchedule(
+                    teacher,
+                    schoolClass,
+                    subjectType,
+                    18,
+                    DateTime.Now.Year
+                );
+
+                teacherScheduleRepository.Save(teacherSchedule);
+            }
 
             var slot = new ScheduleSlot(day, period);
-
             var schedule = new Schedule(teacherSchedule, slot);
 
             scheduleRepository.Save(schedule);
@@ -368,7 +394,7 @@ namespace SchoolManagementSystem.Application
             //Dzheyda
             var schedule = teacherScheduleRepository.GetById(scheduleId);
 
-           if (schedule == null)
+            if (schedule == null)
             {
                 throw new KeyNotFoundException("Schedule not found");
             }

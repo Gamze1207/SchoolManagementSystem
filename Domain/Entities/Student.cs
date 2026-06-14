@@ -29,6 +29,7 @@ namespace SchoolManagementSystem.Domain.Entities
             Name = name;
             Age = age;
             Class = _class;
+            ClassId = _class.Id;
             grades = new List<Grade>();
             attendances = new List<Attendance>();
         }
