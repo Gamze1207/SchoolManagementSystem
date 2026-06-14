@@ -25,8 +25,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
         }
         public Class? GetById(int id)
         {
-            return _db.Classes
-                .FirstOrDefault(c => c.Id == id);
+            return _db.Classes.FirstOrDefault(c => c.Id == id);
         }
 
         public void Save(Class classEntity)

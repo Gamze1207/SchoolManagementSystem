@@ -202,6 +202,13 @@ namespace SchoolManagementSystem.ConsoleUI
 
             var subjects = new List<SubjectType>();
 
+            var subjectList = schoolService.GetAllSubjects();
+            Console.WriteLine("Available Subject:");
+            foreach(var sub in subjects)
+            {
+                Console.WriteLine($"{sub.Id} - {sub.Type}");
+            }
+
             Console.WriteLine("Enter subjects (empty to stop):");
             while (true)
             {
@@ -269,6 +276,12 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddGrade()
         {
             //Dzheyda
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach(var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
             Console.Write("Student Id: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int studentId))
@@ -304,6 +317,13 @@ namespace SchoolManagementSystem.ConsoleUI
         private void UpdateGrade()
         {
             //Dzheyda
+
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach (var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
             Console.Write("Student Id: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int studentId))
@@ -311,6 +331,28 @@ namespace SchoolManagementSystem.ConsoleUI
                 Console.WriteLine("Invalid student ID");
                 return;
             }
+
+            var student = schoolService.GetStudentById(studentId);
+            if(student == null)
+            {
+                Console.WriteLine("Student not found");
+                return;
+            }
+
+            Console.WriteLine($"Grades for {student.Name}:");
+
+            if(student.grades.Count == 0)
+            {
+                Console.WriteLine("This student has no grades.");
+                Console.ReadLine();
+                return;
+            }
+
+            foreach(var g in student.grades)
+            {
+                Console.WriteLine($"{g.Id} | {g.Subject.Type} | {g.Value}");
+            }
+
 
             Console.Write("Grade Id: ");
             string? inputGradeId = Console.ReadLine();
@@ -320,12 +362,20 @@ namespace SchoolManagementSystem.ConsoleUI
                 return;
             }
 
+
             Console.Write("New value: ");
             string? inputValue = Console.ReadLine();
             if (!int.TryParse(inputValue, out int value))
             {
                 Console.WriteLine("Invalid value");
                 return;
+            }
+
+            var subjects = schoolService.GetAllSubjects();
+            Console.WriteLine("Available Subjects:");
+            foreach(var sub in subjects)
+            {
+                Console.WriteLine($"{sub.Id} - {sub.Type}"); 
             }
 
             Console.Write("Subject type: ");
@@ -347,6 +397,12 @@ namespace SchoolManagementSystem.ConsoleUI
         private void CalculateAverageGrade()
         {
             //Gamze
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach(var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -371,6 +427,12 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GenerateReportCard()
         {
             //Gamze
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach(var s in students)
+            {
+                Console.WriteLine("Available Students:");
+            }
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -424,12 +486,25 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddStudentToClass()
         {
             //Dzheyda
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach(var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
             Console.Write("Student Id: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int studentId))
             {
                 Console.WriteLine("Invalid student ID");
                 return;
+            }
+
+            var classes = schoolService.GetAllClasses();
+            Console.WriteLine("Available Classes:");
+            foreach(var c in classes)
+            {
+                Console.WriteLine($"{c.Id} - {c.Name}");
             }
 
             Console.Write("Class Id: ");
@@ -456,6 +531,13 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetAbsences()
         {
             //Gamze
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach(var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
+
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -482,6 +564,12 @@ namespace SchoolManagementSystem.ConsoleUI
         private void AddAttendance()
         {
             //Gamze
+            var students = schoolService.GettAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach(var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
             Console.Write("Student ID: ");
             string? inputStudentId = Console.ReadLine();
             if (!int.TryParse(inputStudentId, out int id))
@@ -531,6 +619,13 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetGradesBySubject()
         {
             //Dzheyda
+            var subjects = schoolService.GetAllSubjects();
+            Console.WriteLine("Available Subjects:");
+            foreach(var sub in subjects)
+            {
+                Console.WriteLine($"{sub.Id} - {sub.Type}");
+            }
+
             Console.Write("Subject type: ");
             Enum.TryParse(Console.ReadLine(), out SubjectType subject);
 
@@ -552,6 +647,13 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetGradesByClass()
         {
             //Dzheyda
+            var classes = schoolService.GetAllClasses();
+            Console.WriteLine("Available Classes:");
+            foreach(var c in classes)
+            {
+                Console.WriteLine($"{c.IId} - {c.Name}");
+            }
+
             Console.Write("Class Id: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int classId))
@@ -578,6 +680,14 @@ namespace SchoolManagementSystem.ConsoleUI
         private void GetTeacherInfo()
         {
             //Dzheyda
+            var teachers = schoolService.GetAllTeachers();
+            Console.WriteLine("Available Teachers:");
+            foreach(var t in teachers)
+            {
+                Console.WriteLine($"{t.Id} - {t.Name}");
+
+            }
+
             Console.Write("Teacher Id: ");
             string? inputTeacherId = Console.ReadLine();
             if (!int.TryParse(inputTeacherId, out int teacherId))
@@ -647,6 +757,16 @@ namespace SchoolManagementSystem.ConsoleUI
 
                 if (choice == "1")
                 {
+                    Console.Clear();
+                    Console.WriteLine("=== Add Schedule Entry ===");
+
+                    var casses = schoolService.GetAllClasses();
+                    Console.WriteLine("Available Classes:");
+                    foreach(var c in classes)
+                    {
+                        Console.WriteLine($"{c.Id} - {c.Name}");
+                    }
+
                     Console.Write("Class ID: ");
                     string? inputClass = Console.ReadLine();
                     if (!int.TryParse(inputClass, out int classId))
@@ -656,6 +776,13 @@ namespace SchoolManagementSystem.ConsoleUI
                         continue;
                     }
 
+                    var teachers = schoolService.GetAllTeachers();
+                    Console.WriteLine("Available Teachers:");
+                    foreach (var t in teachers)
+                    {
+                        Console.WriteLine($"{t.Id} - {t.Name}");
+                    }
+
                     Console.Write("Teacher ID: ");
                     string? inputTeacher = Console.ReadLine();
                     if (!int.TryParse(inputTeacher, out int teacherId))
@@ -663,6 +790,13 @@ namespace SchoolManagementSystem.ConsoleUI
                         Console.WriteLine("Invalid teacher ID");
                         Console.ReadLine();
                         continue;
+                    }
+
+                    var subjects = schoolService.GetAllSubjects();
+                    Console.WriteLine("Available Subjects:");
+                    foreach(var sub in subjects)
+                    {
+                        Console.WriteLine($"{sub.Id} - {sub.Type}");
                     }
 
                     Console.Write("Subject type: ");
@@ -759,6 +893,14 @@ namespace SchoolManagementSystem.ConsoleUI
         private void SetScheduleYear()
         {
             //Dzheyda
+            var schedules = schoolService.GetSchedule();
+            Console.WriteLine("Available Schedules:");
+
+            foreach (var s in schedules)
+            {
+                Console.WriteLine($"Schedule ID: {s.Id} | Teacher Schedule ID:{s.TeacherScheduleId} | Slot: {s.Slot}");
+            }
+
             Console.Write("Schedule Id: ");
             string? inputScheduleId = Console.ReadLine();
             if (!int.TryParse(inputScheduleId, out int scheduleId))

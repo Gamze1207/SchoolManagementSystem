@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Infrastructure.SqlRepositories
                 .ToList();
         }
 
-        public Student GetById(int id)
+        public Student? GetById(int id)
         {
             return _db.Students
                 .Include(s => s.Class)

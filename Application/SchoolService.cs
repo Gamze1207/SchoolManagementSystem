@@ -67,10 +67,20 @@ namespace SchoolManagementSystem.Application
             teacherRepository.Save(teacher);
         }
 
+        public IReadOnlyList<Teacher> GetTeachers()
+        {
+            return teacherRepository.GetAll();
+        }
+
         public void AddSubject(Subject subject)
         {
             //Gamze
             subjectRepository.Save(subject);
+        }
+
+        public IReadOnlyList<Subject> GetAllSubjects()
+        {
+            return subjectRepository.GetAll();
         }
 
         public void AddGrade(int studentId, int value, SubjectType type)

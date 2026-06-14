@@ -11,7 +11,7 @@ namespace SchoolManagementSystem.Application.Interfaces
     {
 
         IReadOnlyList<TeacherSchedule> GetAll();
-        TeacherSchedule GetById(int id);
+        TeacherSchedule? GetById(int id);
 
         void Save(TeacherSchedule schedule);
         void Update(TeacherSchedule schedule);
