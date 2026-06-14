@@ -151,6 +151,13 @@ namespace SchoolManagementSystem.ConsoleUI
             Console.Clear();
             Console.WriteLine("===== Update Student =====");
 
+            var students = schoolService.GetAllStudents();
+            Console.WriteLine("Available Students:");
+            foreach (var s in students)
+            {
+                Console.WriteLine($"{s.Id} - {s.Name}");
+            }
+
             Console.Write("Student ID: ");
             string? input = Console.ReadLine();
             if (!int.TryParse(input, out int id))
@@ -382,7 +389,7 @@ namespace SchoolManagementSystem.ConsoleUI
 
             foreach(var g in student.grades)
             {
-                Console.WriteLine($"{g.Id} | {g.Subject.Type} | {g.Value}");
+                Console.WriteLine($"Id: {g.Id} | Subject: {g.Subject.Type} | Grade: {g.Value}");
             }
 
             Console.Write("Grade Id: ");
@@ -494,11 +501,16 @@ namespace SchoolManagementSystem.ConsoleUI
 
                 Console.WriteLine("Grades:");
                 foreach (var g in report.Grades)
-                    Console.WriteLine($"{g.Subject.Type}: {g.Value}");
+                {
+                    string subjectName = g.Subject?.Type.ToString() ?? "Unknown subject";
+                    Console.WriteLine($"{subjectName}: {g.Value}");
+                }
 
                 Console.WriteLine("Absences:");
                 foreach (var a in report.Absences)
+                {
                     Console.WriteLine($"{a.Date.ToShortDateString()} - {a.Status}");
+                }
             }
             catch (Exception ex)
             {
@@ -1097,7 +1109,7 @@ namespace SchoolManagementSystem.ConsoleUI
             Console.WriteLine("9) Add a class.");
             Console.WriteLine("10) Add a student to a class.");
             Console.WriteLine("11) Get absences.");
-            Console.WriteLine("12) Add an absence.");
+            Console.WriteLine("12) Add an attendance.");
             Console.WriteLine("13) Get grades by subject.");
             Console.WriteLine("14) Get grades by class.");
             Console.WriteLine("15) Get teacher info.");

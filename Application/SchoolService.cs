@@ -313,7 +313,7 @@ namespace SchoolManagementSystem.Application
                 throw new KeyNotFoundException("Subject not found");
             }
 
-            bool teacherCanTeach = subject.Teachers.Any(t => t.Id == teacherId);
+            bool teacherCanTeach = teacher.subjects.Contains(subject.Type);
             if (!teacherCanTeach)
             {
                 throw new InvalidOperationException("Teacher cannot teach this subject");
@@ -359,11 +359,13 @@ namespace SchoolManagementSystem.Application
                     teacher,
                     schoolClass,
                     subjectType,
-                    18,
+                    1,
                     DateTime.Now.Year
                 );
-
-                teacherScheduleRepository.Save(teacherSchedule);
+            }
+            else
+            {
+                teacherSchedule.Hours += 1;
             }
 
             var slot = new ScheduleSlot(day, period);
